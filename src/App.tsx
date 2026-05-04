@@ -125,7 +125,7 @@ export default function App() {
                         </div>
                      </div>
                      {currentRole === 'operator' && (
-                        <button className="bg-blue-600/10 hover:bg-blue-600 text-blue-500 hover:text-white px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border border-blue-500/20">
+                        <button className="bg-industrial-cyan/10 hover:bg-industrial-cyan text-industrial-cyan hover:text-white px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border border-industrial-cyan/20">
                            Gestionar OT
                         </button>
                      )}

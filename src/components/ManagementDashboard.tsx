@@ -53,7 +53,7 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
     { name: 'Efficiency', value: 35 },
     { name: 'Gap', value: 65 },
   ];
-  const COLORS = ['#ED1C24', '#1c1c1c'];
+  const COLORS = ['#ED1C24', '#1E1E1E'];
 
   const renderAnalytics = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -68,7 +68,7 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
              {/* Pins with enhanced visibility */}
              <div className="absolute top-1/4 left-1/4 w-8 h-8 flex flex-col items-center">
                 <div className="bg-industrial-green text-black text-[10px] font-black px-2 py-1 rounded-md mb-1 shadow-lg shadow-industrial-green/50">65</div>
-                <div className="w-3 h-3 bg-industrial-green rounded-full shadow-[0_0_15px_#00FF00] animate-pulse"></div>
+                <div className="w-3 h-3 bg-industrial-green rounded-full shadow-[0_0_15px_#00C853] animate-pulse"></div>
              </div>
              <div className="absolute top-1/2 left-1/3 w-8 h-8 flex flex-col items-center">
                 <div className="bg-industrial-orange text-black text-[10px] font-black px-2 py-1 rounded-md mb-1 shadow-lg shadow-industrial-orange/50">250</div>
@@ -175,7 +175,7 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
                   stroke="none"
                 >
                   <Cell fill="#ED1C24" />
-                  <Cell fill="#2a2a2a" />
+                  <Cell fill="#1E1E1E" />
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
@@ -208,7 +208,7 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
               <BarChart data={MOCK_OPERATOR_PRODUCTIVITY.slice(0, 4)} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                  <Bar dataKey="actual" radius={[4, 4, 0, 0]} barSize={12}>
                     {MOCK_OPERATOR_PRODUCTIVITY.map((_, index) => (
-                       <Cell key={`cell-${index}`} fill={index === 0 ? '#ED1C24' : index === 1 ? '#9c27b0' : index === 2 ? '#00FF00' : '#00bcd4'} />
+                       <Cell key={`cell-${index}`} fill={index === 0 ? '#ED1C24' : index === 1 ? '#9C27B0' : index === 2 ? '#00C853' : '#2979FF'} />
                      ))}
                  </Bar>
                 <XAxis 
@@ -221,7 +221,7 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
                 <YAxis hide domain={[0, 100]} />
                 <Tooltip 
                   cursor={{ fill: 'transparent' }}
-                  contentStyle={{ backgroundColor: '#1c1c1c', border: '1px solid #ffffff10', borderRadius: '12px' }}
+                  contentStyle={{ backgroundColor: '#1E1E1E', border: '1px solid #ffffff10', borderRadius: '12px' }}
                 />
               </BarChart>
             </ResponsiveContainer>

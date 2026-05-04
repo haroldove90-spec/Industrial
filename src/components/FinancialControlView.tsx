@@ -26,7 +26,7 @@ import {
 } from 'recharts';
 import { MOCK_FINANCIAL_DATA, MOCK_NON_CONFORMITIES } from '../constants';
 
-const COLORS = ['#ED1C24', '#9c27b0', '#00FF00', '#FFB300'];
+const COLORS = ['#ED1C24', '#9C27B0', '#00C853', '#FFB300'];
 
 export const FinancialControlView: React.FC = () => {
   const totalCostOfNC = MOCK_NON_CONFORMITIES.reduce((acc, curr) => acc + curr.costImpact, 0);
@@ -70,7 +70,7 @@ export const FinancialControlView: React.FC = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { label: 'Ingresos Proyectados', value: '$84,200', trend: '+12.5%', isUp: true, icon: TrendingUp },
-          { label: 'Costo de No Calidad', value: `$${totalCostOfNC.toLocaleString()}`, trend: '-$1,200', isUp: false, icon: AlertCircle, color: 'text-red-500' },
+          { label: 'Costo de No Calidad', value: `$${totalCostOfNC.toLocaleString()}`, trend: '-$1,200', isUp: false, icon: AlertCircle, color: 'text-industrial-red' },
           { label: 'Margen Bruto', value: '32.8%', trend: '+2.1%', isUp: true, icon: Target },
           { label: 'Costo Operativo/Hora', value: '$145.2', trend: '-2.4%', isUp: false, icon: CreditCard }
         ].map((kpi, idx) => (
@@ -130,7 +130,7 @@ export const FinancialControlView: React.FC = () => {
                 />
                 <Tooltip 
                   cursor={{ fill: '#ffffff05' }}
-                  contentStyle={{ backgroundColor: '#111', border: '1px solid #ffffff10', borderRadius: '12px' }}
+                  contentStyle={{ backgroundColor: '#1E1E1E', border: '1px solid #ffffff10', borderRadius: '12px' }}
                 />
                 <Bar dataKey="presupuesto" fill="#ED1C24" radius={[4, 4, 0, 0]} barSize={24} />
                 <Bar dataKey="real" fill="#ffffff20" radius={[4, 4, 0, 0]} barSize={24} />
