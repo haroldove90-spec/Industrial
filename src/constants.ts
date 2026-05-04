@@ -17,7 +17,8 @@ import {
   Search,
   ShieldCheck,
   Activity,
-  AlertOctagon
+  AlertOctagon,
+  DollarSign
 } from 'lucide-react';
 import { 
   OperatorProductivity, 
@@ -26,7 +27,9 @@ import {
   MaintenanceSchedule, 
   Blueprint,
   AttendanceRecord,
-  UserProfile
+  UserProfile,
+  FinancialMetric,
+  AppNotification
 } from './types';
 
 export interface Module {
@@ -47,6 +50,7 @@ export const MODULES: Module[] = [
   { id: 'workforce', name: 'Operarios', icon: Users, description: 'Gestión de personal y Check-in', count: '80%', roles: ['admin', 'operator'] },
   { id: 'blueprints', name: 'Planos Técnicos', icon: FileText, description: 'Catálogo de especificaciones', roles: ['admin', 'operator', 'quality', 'maintenance'] },
   { id: 'reports', name: 'Gerencia', icon: BarChart3, description: 'KPIs, OEE y Análisis de Calidad', roles: ['admin', 'management'] },
+  { id: 'finance', name: 'Finanzas', icon: DollarSign, description: 'Costos, Rentabilidad y NC Impact', roles: ['admin'] },
   { id: 'admin', name: 'Usuarios', icon: Settings, description: 'Gestión de accesos y roles', roles: ['admin'] },
 ];
 
@@ -201,6 +205,18 @@ export const MOCK_BLUEPRINTS: Blueprint[] = [
 
 export const MOCK_ATTENDANCE: AttendanceRecord[] = [
   { id: 'att-1', operatorId: 'op-1', date: '2024-05-04', checkIn: '08:00:15', checkOut: '17:05:30' },
+];
+
+export const MOCK_NOTIFICATIONS: AppNotification[] = [
+  { id: 'n-1', type: 'maintenance', message: 'La Prensa 500T ha alcanzado las 600 horas. Programar servicio.', timestamp: '10 min ago', isRead: false, priority: 'high' },
+  { id: 'n-2', type: 'production', message: 'OT-2024-001 tiene un retraso del 15% vs estandar.', timestamp: '22 min ago', isRead: false, priority: 'medium' },
+  { id: 'n-3', type: 'inventory', message: 'Stock de Aluminio 6061 por debajo del punto de reorden.', timestamp: '1 hour ago', isRead: true, priority: 'high' },
+];
+
+export const MOCK_FINANCIAL_DATA: FinancialMetric[] = [
+  { orderId: 'OT-2024-001', budget: 5000, actualCost: 4850, variance: -3, materialsCost: 3000, laborCost: 1850 },
+  { orderId: 'OT-2024-002', budget: 12000, actualCost: 13200, variance: 10, materialsCost: 8000, laborCost: 5200 },
+  { orderId: 'OT-2024-003', budget: 3500, actualCost: 3100, variance: -11, materialsCost: 2000, laborCost: 1100 },
 ];
 
 export const MOCK_NON_CONFORMITIES: NonConformity[] = [

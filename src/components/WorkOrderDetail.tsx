@@ -17,7 +17,8 @@ import {
   ArrowLeft,
   Settings,
   ShieldCheck,
-  AlertTriangle
+  AlertTriangle,
+  Activity
 } from 'lucide-react';
 import { WorkOrder, WOStatus } from '../types';
 
@@ -61,11 +62,11 @@ export default function WorkOrderDetail({ order, onBack }: WorkOrderDetailProps)
 
   const getStatusStyle = (s: WOStatus) => {
     switch (s) {
-      case 'in_progress': return 'bg-blue-50 text-blue-700 border-blue-200';
-      case 'quality_check': return 'bg-yellow-50 text-yellow-700 border-yellow-200';
-      case 'finished': return 'bg-green-50 text-green-700 border-green-200';
-      case 'blocked': return 'bg-red-50 text-red-700 border-red-200';
-      default: return 'bg-gray-50 text-gray-700 border-gray-200';
+      case 'in_progress': return 'bg-industrial-red/10 text-industrial-red border-industrial-red/20';
+      case 'quality_check': return 'bg-industrial-orange/10 text-industrial-orange border-industrial-orange/20';
+      case 'finished': return 'bg-industrial-green/10 text-industrial-green border-industrial-green/20';
+      case 'blocked': return 'bg-industrial-red text-white border-industrial-red';
+      default: return 'bg-white/5 text-white/40 border-white/10';
     }
   };
 
@@ -79,11 +80,11 @@ export default function WorkOrderDetail({ order, onBack }: WorkOrderDetailProps)
       <div className="flex items-center justify-between">
         <button 
           onClick={onBack}
-          className="flex items-center gap-2 text-natural-accent font-bold uppercase text-[10px] tracking-widest hover:text-natural-sidebar transition-colors"
+          className="flex items-center gap-2 text-white/40 font-black uppercase text-[10px] tracking-widest hover:text-white transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Volver a Listado
         </button>
-        <div className={`px-4 py-1.5 rounded-full border text-[11px] font-black uppercase tracking-widest ${getStatusStyle(status)}`}>
+        <div className={`px-5 py-2 rounded-xl border text-[11px] font-black uppercase tracking-widest ${getStatusStyle(status)}`}>
           {status.replace('_', ' ')}
         </div>
       </div>
@@ -92,70 +93,70 @@ export default function WorkOrderDetail({ order, onBack }: WorkOrderDetailProps)
         
         {/* Basic Info & Traceability */}
         <div className="lg:col-span-2 space-y-8">
-          <div className="bg-white p-8 rounded-2xl border border-natural-border shadow-sm">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="p-3 bg-natural-bg rounded-xl">
-                <ClipboardCheck className="w-6 h-6 text-natural-accent" />
+          <div className="bg-industrial-card p-10 rounded-[2.5rem] border border-industrial-border shadow-2xl">
+            <div className="flex items-center gap-6 mb-10">
+              <div className="w-16 h-16 bg-industrial-red/10 rounded-2xl flex items-center justify-center border border-industrial-red/20">
+                <ClipboardCheck className="w-8 h-8 text-industrial-red" />
               </div>
               <div>
-                <h2 className="text-2xl font-serif italic text-natural-sidebar">Detalles de {order.orderNumber}</h2>
-                <p className="text-xs text-natural-text/40 font-bold uppercase tracking-widest">Cliente: {order.client}</p>
+                <h2 className="text-3xl font-black italic text-white uppercase tracking-tighter">{order.orderNumber}</h2>
+                <p className="text-[10px] text-white/20 font-black uppercase tracking-[0.2em]">Cliente: {order.client}</p>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-8 border-t border-natural-border pt-8">
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <User className="w-4 h-4 text-natural-accent" />
+            <div className="grid grid-cols-2 gap-10 border-t border-white/5 pt-10">
+              <div className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <User className="w-5 h-5 text-industrial-red/60" />
                   <div>
-                    <p className="text-[10px] font-black uppercase text-natural-text/40">Operario Responsable</p>
-                    <p className="text-sm font-bold">{order.operator}</p>
+                    <p className="text-[9px] font-black uppercase text-white/20 tracking-widest">Operario</p>
+                    <p className="text-sm font-bold text-white/90">{order.operator}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <Wrench className="w-4 h-4 text-natural-accent" />
+                <div className="flex items-center gap-4">
+                  <Wrench className="w-5 h-5 text-industrial-red/60" />
                   <div>
-                    <p className="text-[10px] font-black uppercase text-natural-text/40">Maquinaria Asignada</p>
-                    <p className="text-sm font-bold">{order.machine}</p>
+                    <p className="text-[9px] font-black uppercase text-white/20 tracking-widest">Máquina</p>
+                    <p className="text-sm font-bold text-white/90">{order.machine}</p>
                   </div>
                 </div>
               </div>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Package className="w-4 h-4 text-natural-accent" />
+              <div className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <Package className="w-5 h-5 text-industrial-red/60" />
                   <div>
-                    <p className="text-[10px] font-black uppercase text-natural-text/40">Materia Prima</p>
-                    <p className="text-sm font-bold">{order.materialUsed}</p>
+                    <p className="text-[9px] font-black uppercase text-white/20 tracking-widest">Material</p>
+                    <p className="text-sm font-bold text-white/90">{order.materialUsed}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <ShieldCheck className="w-4 h-4 text-natural-accent" />
+                <div className="flex items-center gap-4">
+                  <ShieldCheck className="w-5 h-5 text-industrial-red/60" />
                   <div>
-                    <p className="text-[10px] font-black uppercase text-natural-text/40">Lote de Trazabilidad</p>
-                    <p className="text-sm font-mono font-bold">{order.batchNumber}</p>
+                    <p className="text-[9px] font-black uppercase text-white/20 tracking-widest">Lote Trazabilidad</p>
+                    <p className="text-sm font-mono font-black text-white/90">{order.batchNumber}</p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-8 rounded-2xl border border-natural-border shadow-sm">
-            <h3 className="text-sm font-black uppercase tracking-widest mb-6 flex items-center gap-2">
-              <History className="w-4 h-4 text-natural-accent" /> Historial de Trazabilidad
+          <div className="bg-industrial-card p-10 rounded-[2.5rem] border border-industrial-border shadow-2xl">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] mb-8 flex items-center gap-3 text-white/40">
+              <History className="w-4 h-4 text-industrial-red" /> Historial Operativo
             </h3>
-            <div className="space-y-6">
+            <div className="space-y-8">
               {[
                 { time: '08:30 AM', event: 'Materia prima retirada de inventario principal.', user: 'Almacén' },
                 { time: '09:15 AM', event: 'Inicio de seteo en máquina CNC-04.', user: 'Carlos Ruiz' },
                 { time: '11:00 AM', event: 'Producción de primeras 50 unidades.', user: 'Carlos Ruiz' },
               ].map((h, i) => (
-                <div key={i} className="flex gap-4 relative">
-                  <div className="text-[10px] font-mono font-bold text-natural-text/40 w-16 pt-1">{h.time}</div>
-                  <div className="w-2 h-2 rounded-full bg-natural-accent mt-1.5 relative z-10 shrink-0"></div>
-                  {i < 2 && <div className="absolute left-[75px] top-4 w-px h-8 bg-natural-border"></div>}
+                <div key={i} className="flex gap-6 relative">
+                  <div className="text-[10px] font-black text-white/20 w-16 pt-1">{h.time}</div>
+                  <div className="w-2 h-2 rounded-full bg-industrial-red mt-2.5 relative z-10 shrink-0 shadow-[0_0_8px_#d92b2b]"></div>
+                  {i < 2 && <div className="absolute left-[80px] top-4 w-px h-10 bg-white/5"></div>}
                   <div className="flex-1">
-                    <p className="text-sm font-medium">{h.event}</p>
-                    <p className="text-[10px] text-natural-text/40 italic">Autorizado por: {h.user}</p>
+                    <p className="text-sm font-medium text-white/80">{h.event}</p>
+                    <p className="text-[9px] text-white/20 font-black uppercase tracking-widest mt-1">Autorizado por: {h.user}</p>
                   </div>
                 </div>
               ))}
@@ -165,38 +166,38 @@ export default function WorkOrderDetail({ order, onBack }: WorkOrderDetailProps)
 
         {/* Quality Inspection Form */}
         <div className="space-y-8">
-          <div className={`p-8 rounded-2xl border transition-all shadow-sm ${inspectionResult === 'fail' ? 'bg-red-50 border-red-200' : 'bg-white border-natural-border'}`}>
-            <h3 className="text-sm font-black uppercase tracking-widest mb-6 flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-natural-accent" /> Inspección de Calidad
+          <div className={`p-10 rounded-[2.5rem] border transition-all shadow-2xl ${inspectionResult === 'fail' ? 'bg-industrial-red/5 border-industrial-red/30' : 'bg-industrial-card border-industrial-border'}`}>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] mb-10 flex items-center gap-3 text-white/40">
+              <ShieldCheck className="w-4 h-4 text-industrial-red" /> Inspección QC
             </h3>
             
-            <form className="space-y-4">
-              <div>
-                <label className="text-[10px] font-black uppercase text-natural-text/40 mb-1 block">Medida Nominal (mm)</label>
+            <form className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-[9px] font-black uppercase text-white/20 tracking-widest ml-1">Nominal (mm)</label>
                 <input 
                   type="number" 
                   value={nominal}
                   onChange={(e) => setNominal(e.target.value)}
-                  placeholder="Ej: 50.00"
-                  className="w-full bg-natural-bg/50 border border-natural-border rounded-lg p-3 text-sm focus:ring-2 focus:ring-natural-accent outline-none font-mono"
+                  placeholder="50.00"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:ring-2 focus:ring-industrial-red/50 outline-none font-mono text-white placeholder:text-white/10"
                 />
               </div>
-              <div>
-                <label className="text-[10px] font-black uppercase text-natural-text/40 mb-1 block">Medida Real (mm)</label>
+              <div className="space-y-2">
+                <label className="text-[9px] font-black uppercase text-white/20 tracking-widest ml-1">Real (mm)</label>
                 <input 
                   type="number" 
                   value={actual}
                   onChange={(e) => setActual(e.target.value)}
-                  placeholder="Ej: 50.02"
-                  className="w-full bg-natural-bg/50 border border-natural-border rounded-lg p-3 text-sm focus:ring-2 focus:ring-natural-accent outline-none font-mono"
+                  placeholder="50.02"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:ring-2 focus:ring-industrial-red/50 outline-none font-mono text-white placeholder:text-white/10"
                 />
               </div>
-              <div>
-                <label className="text-[10px] font-black uppercase text-natural-text/40 mb-1 block">Tolerancia (±mm)</label>
+              <div className="space-y-2">
+                <label className="text-[9px] font-black uppercase text-white/20 tracking-widest ml-1">Tolerancia</label>
                 <select 
                   value={tolerance}
                   onChange={(e) => setTolerance(e.target.value)}
-                  className="w-full bg-natural-bg/50 border border-natural-border rounded-lg p-3 text-sm focus:ring-2 focus:ring-natural-accent outline-none font-mono"
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-sm focus:ring-2 focus:ring-industrial-red/50 outline-none font-mono text-white"
                 >
                   <option value="0.01">± 0.01 (Alta Precisión)</option>
                   <option value="0.05">± 0.05 (Estándar)</option>
@@ -206,18 +207,20 @@ export default function WorkOrderDetail({ order, onBack }: WorkOrderDetailProps)
 
               {inspectionResult && (
                 <motion.div 
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className={`mt-6 p-4 rounded-xl flex items-center gap-4 border ${
+                   initial={{ opacity: 0, y: 10 }}
+                   animate={{ opacity: 1, y: 0 }}
+                   className={`p-6 rounded-[1.5rem] flex items-center gap-5 border ${
                     inspectionResult === 'pass' 
-                      ? 'bg-green-50 border-green-200 text-green-700' 
-                      : 'bg-red-100 border-red-300 text-red-800'
+                      ? 'bg-industrial-green/10 border-industrial-green/20 text-industrial-green' 
+                      : 'bg-industrial-red/20 border-industrial-red/30 text-industrial-red animate-pulse'
                   }`}
                 >
-                  {inspectionResult === 'pass' ? <CheckCircle2 className="w-6 h-6" /> : <XSquare className="w-6 h-6" />}
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${inspectionResult === 'pass' ? 'bg-industrial-green/20' : 'bg-industrial-red/20'}`}>
+                    {inspectionResult === 'pass' ? <CheckCircle2 className="w-5 h-5" /> : <XSquare className="w-5 h-5" />}
+                  </div>
                   <div>
-                    <p className="text-xs font-black uppercase tracking-widest">{inspectionResult === 'pass' ? 'DICTAMEN: PASA' : 'DICTAMEN: NO PASA'}</p>
-                    <p className="text-[10px] opacity-80">{inspectionResult === 'pass' ? 'Dentro de los rangos de tolerancia permitidos.' : 'Fuera de rango dimensional.'}</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em]">{inspectionResult === 'pass' ? 'DICTAMEN: PASA' : 'DICTAMEN: NO PASA'}</p>
+                    <p className="text-[9px] opacity-60 font-medium uppercase tracking-tight mt-0.5">{inspectionResult === 'pass' ? 'Dentro de rangos dimensionales.' : 'Fuera de tolerancia permitida.'}</p>
                   </div>
                 </motion.div>
               )}
@@ -226,13 +229,13 @@ export default function WorkOrderDetail({ order, onBack }: WorkOrderDetailProps)
                 type="button"
                 disabled={!inspectionResult || isSubmitting}
                 onClick={handleSubmitInspection}
-                className={`w-full py-4 rounded-xl font-black uppercase tracking-widest transition-all ${
+                className={`w-full py-5 rounded-2xl font-black uppercase tracking-[0.3em] text-[10px] transition-all shadow-2xl ${
                   !inspectionResult 
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
-                    : 'bg-natural-sidebar text-white hover:bg-natural-accent shadow-lg shadow-natural-sidebar/20 active:scale-95'
+                    ? 'bg-white/5 text-white/20 cursor-not-allowed' 
+                    : 'bg-industrial-red text-white hover:bg-red-500 shadow-industrial-red/20 active:scale-95'
                 }`}
               >
-                {isSubmitting ? 'Procesando...' : 'Registrar Inspección'}
+                {isSubmitting ? 'REGISTRANDO...' : 'REGISTRAR INSPECCIÓN'}
               </button>
             </form>
 
@@ -240,35 +243,39 @@ export default function WorkOrderDetail({ order, onBack }: WorkOrderDetailProps)
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="mt-6 border-t border-red-200 pt-6"
+                className="mt-8 border-t border-white/5 pt-8"
               >
-                <button className="w-full flex items-center justify-center gap-2 text-red-600 bg-red-100 p-3 rounded-lg text-xs font-bold uppercase tracking-tight hover:bg-red-200 transition-colors">
-                  <AlertTriangle className="w-4 h-4" /> Levantar Reclamo a Calidad
+                <button className="w-full flex items-center justify-center gap-3 text-industrial-red bg-industrial-red/10 p-4 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-industrial-red/20 transition-all border border-industrial-red/20">
+                  <AlertTriangle className="w-4 h-4" /> Generar NC Automática
                 </button>
               </motion.div>
             )}
           </div>
 
           {/* Quick Stats Sidebar */}
-          <div className="bg-natural-sidebar p-8 rounded-2xl text-white space-y-6">
-            <h4 className="text-[10px] font-black uppercase tracking-widest text-natural-light-accent">Resumen Operacional</h4>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center pb-3 border-b border-white/10">
-                <span className="text-xs opacity-60">Tiempo de Ciclo</span>
-                <span className="text-xs font-mono font-bold">12.5 seg/unid</span>
+          <div className="bg-industrial-red p-10 rounded-[2.5rem] text-white space-y-8 shadow-2xl shadow-industrial-red/20 relative overflow-hidden group">
+            <div className="absolute top-0 right-0 p-8 opacity-10 transform translate-x-4 -translate-y-4">
+               <Activity className="w-40 h-40 text-black" />
+            </div>
+            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60 relative z-10">Resumen Operativo</h4>
+            <div className="space-y-6 relative z-10">
+              <div className="flex justify-between items-center pb-4 border-b border-white/10">
+                <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Ciclo</span>
+                <span className="text-sm font-black">12.5 s</span>
               </div>
-              <div className="flex justify-between items-center pb-3 border-b border-white/10">
-                <span className="text-xs opacity-60">Meta de Producción</span>
-                <span className="text-xs font-mono font-bold">500 Unid.</span>
+              <div className="flex justify-between items-center pb-4 border-b border-white/10">
+                <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Eficiencia</span>
+                <span className="text-sm font-black">92.4%</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-xs opacity-60">Eficiencia Actual</span>
-                <span className="text-xs font-mono font-bold text-natural-light-accent">92.4%</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Status Maq.</span>
+                <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-green-300">
+                   <div className="w-2 h-2 rounded-full bg-green-400"></div> Estable
+                </span>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </motion.div>
   );

@@ -58,6 +58,24 @@ export interface RootCauseAnalysis {
   data: string[]; // for 5whys it's the 5 questions, for ishikawa it could be categories
 }
 
+export interface AppNotification {
+  id: string;
+  type: 'maintenance' | 'production' | 'inventory' | 'quality';
+  message: string;
+  timestamp: string;
+  isRead: boolean;
+  priority: 'low' | 'medium' | 'high';
+}
+
+export interface FinancialMetric {
+  orderId: string;
+  budget: number;
+  actualCost: number;
+  variance: number;
+  materialsCost: number;
+  laborCost: number;
+}
+
 export interface NonConformity {
   id: string;
   orderId: string;

@@ -5,23 +5,23 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-serif: "Playfair Display", ui-serif, Georgia, serif;
 
-  --color-natural-bg: #F4F4EF;
-  --color-natural-text: #2C2E27;
-  --color-natural-sidebar: #3D4035;
-  --color-natural-accent: #7D8C69;
-  --color-natural-light-accent: #A5B892;
-  --color-natural-border: #E5E5DB;
+  --color-industrial-bg: #111111;
+  --color-industrial-card: #1c1c1c;
+  --color-industrial-red: #d92b2b;
+  --color-industrial-orange: #f59e0b;
+  --color-industrial-green: #10b981;
+  --color-industrial-border: rgba(255, 255, 255, 0.05);
 }
 
 @layer base {
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&family=Inter:wght@400;600;900&display=swap');
 
   body {
-    @apply antialiased text-natural-text bg-natural-bg;
+    @apply antialiased text-white bg-industrial-bg;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   }
 
-  /* Custom scrollbar for natural dashboard */
+  /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -32,7 +32,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-[#E5E5DB] rounded-full hover:bg-[#D4D4C9];
+    @apply bg-white/10 rounded-full hover:bg-white/20;
   }
 }
 
