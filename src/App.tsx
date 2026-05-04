@@ -21,7 +21,11 @@ import {
   ArrowDownRight,
   Database,
   Wrench,
-  LayoutDashboard
+  LayoutDashboard,
+  ClipboardCheck,
+  BarChart3,
+  Activity,
+  Boxes
 } from 'lucide-react';
 import { 
   AreaChart, 
@@ -34,14 +38,246 @@ import {
   PieChart,
   Pie,
   Cell,
-  BarChart,
-  Bar
 } from 'recharts';
-import { MODULES, MOCK_OEE_DATA, MOCK_QUALITY_DATA, MOCK_INVENTORY_LEVELS } from './constants';
+import { MODULES, MOCK_OEE_DATA, MOCK_QUALITY_DATA, MOCK_INVENTORY_LEVELS, MOCK_WORK_ORDERS } from './constants';
+import WorkOrderDetail from './components/WorkOrderDetail';
+import ManagementDashboard from './components/ManagementDashboard';
+import { WorkOrder } from './types';
 
 export default function App() {
   const [activeModule, setActiveModule] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [selectedWO, setSelectedWO] = useState<WorkOrder | null>(null);
+
+  const renderModuleContent = () => {
+    if (activeModule === 'work-orders') {
+      if (selectedWO) {
+        return <WorkOrderDetail order={selectedWO} onBack={() => setSelectedWO(null)} />;
+      }
+      return (
+        <motion.div
+           initial={{ opacity: 0, x: 20 }}
+           animate={{ opacity: 1, x: 0 }}
+           className="space-y-6"
+        >
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-serif italic text-natural-sidebar">Órdenes de Trabajo</h2>
+            <button className="bg-natural-sidebar text-white px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-natural-accent transition-all shadow-lg shadow-natural-sidebar/20">
+              Nueva OT
+            </button>
+          </div>
+          <div className="grid grid-cols-1 gap-4">
+            {MOCK_WORK_ORDERS.map((wo) => (
+              <div 
+                key={wo.id}
+                onClick={() => setSelectedWO(wo as WorkOrder)}
+                className="bg-white p-6 rounded-2xl border border-natural-border shadow-sm hover:border-natural-accent transition-all cursor-pointer group"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-natural-bg rounded-xl flex items-center justify-center">
+                      <ClipboardCheck className="w-6 h-6 text-natural-accent" />
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-lg">{wo.orderNumber}</h4>
+                      <p className="text-[10px] font-black uppercase text-natural-text/40 tracking-widest">{wo.client}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-8">
+                     <div className="text-right">
+                        <p className="text-[10px] font-black uppercase text-natural-text/40 mb-1">Status</p>
+                        <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded border ${
+                          wo.status === 'in_progress' ? 'bg-blue-50 border-blue-200 text-blue-600' : 'bg-yellow-50 border-yellow-200 text-yellow-600'
+                        }`}>
+                          {wo.status.replace('_', ' ')}
+                        </span>
+                     </div>
+                     <div className="text-right w-24">
+                        <p className="text-[10px] font-black uppercase text-natural-text/40 mb-1">Progreso</p>
+                        <div className="w-full h-1.5 bg-natural-bg rounded-full overflow-hidden">
+                           <div className="h-full bg-natural-accent" style={{ width: `${wo.progress}%` }}></div>
+                        </div>
+                     </div>
+                     <ChevronRight className="w-5 h-5 text-natural-border group-hover:text-natural-accent transition-colors" />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      );
+    }
+
+    if (activeModule === 'reports') {
+      return <ManagementDashboard />;
+    }
+
+    if (activeModule === 'dashboard') {
+      return (
+        <motion.div
+          key="dashboard-view"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          className="space-y-8"
+        >
+          {/* KPI Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white border border-natural-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-[10px] font-bold uppercase text-natural-accent mb-2 tracking-widest font-mono">Eficiencia (OEE)</div>
+              <div className="flex items-end gap-3">
+                <p className="text-4xl font-light text-natural-sidebar">84.2%</p>
+                <div className="mb-1 flex items-center gap-1 text-[10px] font-bold text-green-600">
+                  <TrendingUp className="w-3 h-3" />
+                  ↑ 2.1%
+                </div>
+              </div>
+              <p className="text-[10px] text-natural-text/40 italic mt-2">vs mes anterior</p>
+            </div>
+            <div className="bg-white border border-natural-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-[10px] font-bold uppercase text-natural-accent mb-2 tracking-widest font-mono">No Conformidades</div>
+              <div className="flex items-end gap-3">
+                <p className="text-4xl font-light text-natural-sidebar">1.28%</p>
+                <div className="mb-1 flex items-center gap-1 text-[10px] font-bold text-red-600">
+                  <ArrowDownRight className="w-3 h-3" />
+                  ↓ 0.4%
+                </div>
+              </div>
+              <p className="text-[10px] text-natural-text/40 italic mt-2">Bajo el límite de 2%</p>
+            </div>
+            <div className="bg-white border border-natural-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+              <div className="text-[10px] font-bold uppercase text-natural-accent mb-2 tracking-widest font-mono">Stock Crítico</div>
+              <div className="flex items-end gap-3">
+                <p className="text-4xl font-light text-natural-sidebar">12 <span className="text-lg">SKUs</span></p>
+                <div className="mb-1 text-[10px] font-bold text-orange-600 uppercase tracking-tighter bg-orange-50 px-2 py-0.5 rounded">
+                  8 Alertas
+                </div>
+              </div>
+              <p className="text-[10px] text-natural-text/40 italic mt-2">Reponer pronto</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+            <div className="lg:col-span-3 bg-white p-8 rounded-2xl border border-natural-border shadow-sm flex flex-col">
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-lg font-semibold tracking-tight">Flujo de Trazabilidad Activo</h2>
+                <span className="text-[9px] bg-natural-bg px-2 py-1 rounded text-natural-accent font-black uppercase tracking-widest">Real-Time Data</span>
+              </div>
+              <div className="flex-1 flex flex-col justify-center gap-4">
+                <div className="flex items-center gap-5">
+                  <div className="w-12 h-12 rounded-full border-2 border-natural-accent flex items-center justify-center text-natural-accent font-bold shadow-sm bg-white">01</div>
+                  <div className="flex-1 p-4 bg-natural-bg rounded-xl border-l-4 border-natural-accent">
+                    <div className="text-[10px] font-black uppercase text-natural-sidebar tracking-widest mb-1">Entrada Materia Prima</div>
+                    <div className="text-xs text-natural-text/60 font-medium">Lote #MP-9942 - Acero Inoxidable 304</div>
+                  </div>
+                </div>
+                <div className="w-0.5 h-6 bg-natural-border ml-[23px]"></div>
+                <div className="flex items-center gap-5">
+                  <div className="w-12 h-12 rounded-full border-2 border-natural-accent flex items-center justify-center text-natural-accent font-bold shadow-sm bg-white">02</div>
+                  <div className="flex-1 p-4 bg-natural-bg rounded-xl border-l-4 border-natural-accent">
+                    <div className="text-[10px] font-black uppercase text-natural-sidebar tracking-widest mb-1">Procesamiento y Corte</div>
+                    <div className="text-xs text-natural-text/60 font-medium">Operario: Carlos Ruiz | Máquina: CNC-04</div>
+                  </div>
+                </div>
+                <div className="w-0.5 h-6 bg-natural-border ml-[23px]"></div>
+                <div className="flex items-center gap-5 opacity-40">
+                  <div className="w-12 h-12 rounded-full border-2 border-natural-sidebar flex items-center justify-center font-bold">03</div>
+                  <div className="flex-1 p-4 border border-natural-border bg-white rounded-xl">
+                    <div className="text-[10px] font-black uppercase tracking-widest mb-1">Validación de Calidad</div>
+                    <div className="text-xs">Pendiente de escaneo dimensional</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="lg:col-span-2 bg-natural-sidebar p-8 rounded-2xl shadow-xl text-white flex flex-col">
+              <div className="flex items-center gap-2 mb-6">
+                <Database className="w-4 h-4 text-natural-light-accent" />
+                <h3 className="text-xs font-bold uppercase tracking-widest text-natural-light-accent">Arquitectura Modular</h3>
+              </div>
+              <div className="space-y-4 font-mono text-[10px] opacity-90 flex-1 overflow-auto scrollbar-hide">
+                <div className="p-3 bg-black/20 rounded-lg border border-white/5 shadow-inner">
+                  <span className="text-[#fbbf24] italic uppercase">TABLE</span> production (<br/>
+                  &nbsp;&nbsp;id uuid <span className="text-natural-light-accent">PK</span>,<br/>
+                  &nbsp;&nbsp;wo_id <span className="text-natural-light-accent">FK</span>,<br/>
+                  &nbsp;&nbsp;machine_id <span className="text-natural-light-accent">FK</span>,<br/>
+                  &nbsp;&nbsp;performance <span className="text-blue-300">DECIMAL</span><br/>
+                  );
+                </div>
+                <div className="p-3 bg-black/20 rounded-lg border border-white/5 shadow-inner">
+                  <span className="text-[#fbbf24] italic uppercase">TABLE</span> traceability (<br/>
+                  &nbsp;&nbsp;id uuid <span className="text-natural-light-accent">PK</span>,<br/>
+                  &nbsp;&nbsp;batch_no <span className="text-white">TEXT</span>,<br/>
+                  &nbsp;&nbsp;logs <span className="text-blue-300">JSONB</span><br/>
+                  );
+                </div>
+              </div>
+              <p className="text-[11px] leading-relaxed italic text-natural-light-accent mt-6 font-medium">
+                Integridad referencial blindada para 10 módulos operativos diseñados para escalabilidad en Supabase.
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-white border border-natural-border p-8 rounded-2xl shadow-sm">
+            <div className="flex items-center justify-between mb-8">
+              <div>
+                <h3 className="text-xl font-bold tracking-tight">Rendimiento Histórico OEE</h3>
+                <p className="text-xs text-natural-text/40 font-medium mt-1 uppercase tracking-widest">Planta de Mecanizado • Últimos 6 días</p>
+              </div>
+              <button className="text-[10px] font-bold uppercase tracking-widest bg-natural-bg px-4 py-2 text-natural-accent rounded-full hover:bg-natural-border transition-colors">Ver Detalles</button>
+            </div>
+            <div className="h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={MOCK_OEE_DATA}>
+                  <defs>
+                    <linearGradient id="colorNatural" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#7D8C69" stopOpacity={0.2}/>
+                      <stop offset="95%" stopColor="#7D8C69" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E5DB" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 'bold', fill: '#3D4035' }}/>
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 'bold', fill: '#3D4035' }} domain={[0, 100]}/>
+                  <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #E5E5DB', backgroundColor: 'white', color: '#3D4035' }}/>
+                  <Area type="monotone" dataKey="oee" stroke="#7D8C69" strokeWidth={4} fillOpacity={1} fill="url(#colorNatural)" />
+                  <Area type="monotone" dataKey="target" stroke="#3D4035" strokeDasharray="8 8" strokeWidth={1} fill="transparent" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </motion.div>
+      );
+    }
+
+    return (
+      <motion.div
+        key="other-view"
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.98 }}
+        className="flex flex-col items-center justify-center h-full text-center space-y-6"
+      >
+        <div className="w-24 h-24 bg-natural-light-accent/10 rounded-3xl flex items-center justify-center mb-4 shadow-inner border border-natural-border">
+          {React.createElement(MODULES.find(m => m.id === activeModule)?.icon || LayoutDashboard, { className: "w-10 h-10 text-natural-accent" })}
+        </div>
+        <h2 className="text-3xl font-serif italic text-natural-sidebar lowercase"><span className="uppercase not-italic font-sans font-bold">Módulo:</span> {MODULES.find(m => m.id === activeModule)?.name}</h2>
+        <p className="text-natural-text/60 max-w-sm font-medium text-lg italic">
+          "Información operacional vinculada al esquema SQL de integridad."
+        </p>
+        <div className="grid grid-cols-2 gap-4 pt-12">
+           <div className="p-6 bg-white border border-natural-border rounded-2xl w-52 text-left shadow-sm">
+              <div className="w-10 h-10 bg-natural-bg rounded-xl mb-4 flex items-center justify-center shadow-sm"><CheckCircle2 className="w-5 h-5 text-natural-accent" /></div>
+              <p className="text-[10px] font-black uppercase text-natural-accent mb-1 tracking-widest">Base de Datos</p>
+              <p className="text-xs font-bold leading-tight">Tablas referenciadas en Supabase</p>
+           </div>
+           <div className="p-6 bg-white border border-natural-border rounded-2xl w-52 text-left shadow-sm">
+              <div className="w-10 h-10 bg-natural-bg rounded-xl mb-4 flex items-center justify-center shadow-sm"><Wrench className="w-5 h-5 text-natural-accent" /></div>
+              <p className="text-[10px] font-black uppercase text-natural-accent mb-1 tracking-widest">Estructura</p>
+              <p className="text-xs font-bold leading-tight">Arquitectura modular escalable</p>
+           </div>
+        </div>
+      </motion.div>
+    );
+  };
 
   return (
     <div className="flex h-screen bg-natural-bg text-natural-text font-sans selection:bg-[#7D8C6920] selection:text-[#3D4035]">
@@ -78,7 +314,10 @@ export default function App() {
             {MODULES.map((module) => (
               <li key={module.id}>
                 <button
-                  onClick={() => setActiveModule(module.id)}
+                  onClick={() => {
+                    setActiveModule(module.id);
+                    setSelectedWO(null);
+                  }}
                   className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all group ${
                     activeModule === module.id 
                       ? 'bg-natural-accent text-white shadow-lg' 
@@ -142,206 +381,7 @@ export default function App() {
         {/* Content View */}
         <div className="flex-1 overflow-y-auto p-8 space-y-8">
           <AnimatePresence mode="wait">
-            {activeModule === 'dashboard' ? (
-              <motion.div
-                key="dashboard-view"
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -15 }}
-                className="space-y-8"
-              >
-                {/* KPI Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* OEE Card */}
-                  <div className="bg-white border border-natural-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-                    <div className="text-[10px] font-bold uppercase text-natural-accent mb-2 tracking-widest font-mono">Eficiencia (OEE)</div>
-                    <div className="flex items-end gap-3">
-                      <p className="text-4xl font-light text-natural-sidebar">84.2%</p>
-                      <div className="mb-1 flex items-center gap-1 text-[10px] font-bold text-green-600">
-                        <TrendingUp className="w-3 h-3" />
-                        ↑ 2.1%
-                      </div>
-                    </div>
-                    <p className="text-[10px] text-natural-text/40 italic mt-2">vs mes anterior</p>
-                  </div>
-
-                  {/* Quality Card */}
-                  <div className="bg-white border border-natural-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-                    <div className="text-[10px] font-bold uppercase text-natural-accent mb-2 tracking-widest font-mono">No Conformidades</div>
-                    <div className="flex items-end gap-3">
-                      <p className="text-4xl font-light text-natural-sidebar">1.28%</p>
-                      <div className="mb-1 flex items-center gap-1 text-[10px] font-bold text-red-600">
-                        <ArrowDownRight className="w-3 h-3" />
-                        ↓ 0.4%
-                      </div>
-                    </div>
-                    <p className="text-[10px] text-natural-text/40 italic mt-2">Bajo el límite de 2%</p>
-                  </div>
-
-                  {/* Inventory Card */}
-                  <div className="bg-white border border-natural-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-                    <div className="text-[10px] font-bold uppercase text-natural-accent mb-2 tracking-widest font-mono">Stock Crítico</div>
-                    <div className="flex items-end gap-3">
-                      <p className="text-4xl font-light text-natural-sidebar">12 <span className="text-lg">SKUs</span></p>
-                      <div className="mb-1 text-[10px] font-bold text-orange-600 uppercase tracking-tighter bg-orange-50 px-2 py-0.5 rounded">
-                        8 Alertas
-                      </div>
-                    </div>
-                    <p className="text-[10px] text-natural-text/40 italic mt-2">Reponer pronto</p>
-                  </div>
-                </div>
-
-                {/* Charts Section */}
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-                  {/* Flujo de Trazabilidad (Left side, larger) */}
-                  <div className="lg:col-span-3 bg-white p-8 rounded-2xl border border-natural-border shadow-sm flex flex-col">
-                    <div className="flex justify-between items-center mb-8">
-                      <h2 className="text-lg font-semibold tracking-tight">Flujo de Trazabilidad Activo</h2>
-                      <span className="text-[9px] bg-natural-bg px-2 py-1 rounded text-natural-accent font-black uppercase tracking-widest">Real-Time Data</span>
-                    </div>
-                    <div className="flex-1 flex flex-col justify-center gap-4">
-                      {/* Step 1 */}
-                      <div className="flex items-center gap-5">
-                        <div className="w-12 h-12 rounded-full border-2 border-natural-accent flex items-center justify-center text-natural-accent font-bold shadow-sm bg-white">01</div>
-                        <div className="flex-1 p-4 bg-natural-bg rounded-xl border-l-4 border-natural-accent">
-                          <div className="text-[10px] font-black uppercase text-natural-sidebar tracking-widest mb-1">Entrada Materia Prima</div>
-                          <div className="text-xs text-natural-text/60 font-medium">Lote #MP-9942 - Acero Inoxidable 304</div>
-                        </div>
-                      </div>
-                      <div className="w-0.5 h-6 bg-natural-border ml-[23px]"></div>
-                      {/* Step 2 */}
-                      <div className="flex items-center gap-5">
-                        <div className="w-12 h-12 rounded-full border-2 border-natural-accent flex items-center justify-center text-natural-accent font-bold shadow-sm bg-white">02</div>
-                        <div className="flex-1 p-4 bg-natural-bg rounded-xl border-l-4 border-natural-accent">
-                          <div className="text-[10px] font-black uppercase text-natural-sidebar tracking-widest mb-1">Procesamiento y Corte</div>
-                          <div className="text-xs text-natural-text/60 font-medium">Operario: Carlos Ruiz | Máquina: CNC-04</div>
-                        </div>
-                      </div>
-                      <div className="w-0.5 h-6 bg-natural-border ml-[23px]"></div>
-                      {/* Step 3 */}
-                      <div className="flex items-center gap-5 opacity-40">
-                        <div className="w-12 h-12 rounded-full border-2 border-natural-sidebar flex items-center justify-center font-bold">03</div>
-                        <div className="flex-1 p-4 border border-natural-border bg-white rounded-xl">
-                          <div className="text-[10px] font-black uppercase tracking-widest mb-1">Validación de Calidad</div>
-                          <div className="text-xs">Pendiente de escaneo dimensional</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Schema DB (Right side) */}
-                  <div className="lg:col-span-2 bg-natural-sidebar p-8 rounded-2xl shadow-xl text-white flex flex-col">
-                    <div className="flex items-center gap-2 mb-6">
-                      <Database className="w-4 h-4 text-natural-light-accent" />
-                      <h3 className="text-xs font-bold uppercase tracking-widest text-natural-light-accent">Arquitectura Modular</h3>
-                    </div>
-                    <div className="space-y-4 font-mono text-[10px] opacity-90 flex-1 overflow-auto scrollbar-hide">
-                      <div className="p-3 bg-black/20 rounded-lg border border-white/5 shadow-inner">
-                        <span className="text-[#fbbf24] italic uppercase">TABLE</span> production (<br/>
-                        &nbsp;&nbsp;id uuid <span className="text-natural-light-accent">PK</span>,<br/>
-                        &nbsp;&nbsp;wo_id <span className="text-natural-light-accent">FK</span>,<br/>
-                        &nbsp;&nbsp;machine_id <span className="text-natural-light-accent">FK</span>,<br/>
-                        &nbsp;&nbsp;performance <span className="text-blue-300">DECIMAL</span><br/>
-                        );
-                      </div>
-                      <div className="p-3 bg-black/20 rounded-lg border border-white/5 shadow-inner">
-                        <span className="text-[#fbbf24] italic uppercase">TABLE</span> traceability (<br/>
-                        &nbsp;&nbsp;id uuid <span className="text-natural-light-accent">PK</span>,<br/>
-                        &nbsp;&nbsp;batch_no <span className="text-white">TEXT</span>,<br/>
-                        &nbsp;&nbsp;logs <span className="text-blue-300">JSONB</span><br/>
-                        );
-                      </div>
-                    </div>
-                    <p className="text-[11px] leading-relaxed italic text-natural-light-accent mt-6 font-medium">
-                      Integridad referencial blindada para 10 módulos operativos diseñados para escalabilidad en Supabase.
-                    </p>
-                  </div>
-                </div>
-
-                {/* Performance Chart (Replacing table for dash) */}
-                <div className="bg-white border border-natural-border p-8 rounded-2xl shadow-sm">
-                  <div className="flex items-center justify-between mb-8">
-                    <div>
-                      <h3 className="text-xl font-bold tracking-tight">Rendimiento Histórico OEE</h3>
-                      <p className="text-xs text-natural-text/40 font-medium mt-1 uppercase tracking-widest">Planta de Mecanizado • Últimos 6 días</p>
-                    </div>
-                    <button className="text-[10px] font-bold uppercase tracking-widest bg-natural-bg px-4 py-2 text-natural-accent rounded-full hover:bg-natural-border transition-colors">Ver Detalles</button>
-                  </div>
-                  <div className="h-[300px]">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <AreaChart data={MOCK_OEE_DATA}>
-                        <defs>
-                          <linearGradient id="colorNatural" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#7D8C69" stopOpacity={0.2}/>
-                            <stop offset="95%" stopColor="#7D8C69" stopOpacity={0}/>
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E5DB" />
-                        <XAxis 
-                          dataKey="name" 
-                          axisLine={false} 
-                          tickLine={false} 
-                          tick={{ fontSize: 11, fontWeight: 'bold', fill: '#3D4035' }}
-                        />
-                        <YAxis 
-                          axisLine={false} 
-                          tickLine={false} 
-                          tick={{ fontSize: 11, fontWeight: 'bold', fill: '#3D4035' }}
-                          domain={[0, 100]}
-                        />
-                        <Tooltip 
-                          contentStyle={{ borderRadius: '12px', border: '1px solid #E5E5DB', backgroundColor: 'white', color: '#3D4035' }}
-                        />
-                        <Area 
-                          type="monotone" 
-                          dataKey="oee" 
-                          stroke="#7D8C69" 
-                          strokeWidth={4}
-                          fillOpacity={1} 
-                          fill="url(#colorNatural)" 
-                        />
-                        <Area 
-                          type="monotone" 
-                          dataKey="target" 
-                          stroke="#3D4035" 
-                          strokeDasharray="8 8" 
-                          strokeWidth={1}
-                          fill="transparent" 
-                        />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  </div>
-                </div>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="other-view"
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.98 }}
-                className="flex flex-col items-center justify-center h-full text-center space-y-6"
-              >
-                <div className="w-24 h-24 bg-natural-light-accent/10 rounded-3xl flex items-center justify-center mb-4 shadow-inner border border-natural-border">
-                  {React.createElement(MODULES.find(m => m.id === activeModule)?.icon || LayoutDashboard, { className: "w-10 h-10 text-natural-accent" })}
-                </div>
-                <h2 className="text-3xl font-serif italic text-natural-sidebar lowercase"><span className="uppercase not-italic font-sans font-bold">Módulo:</span> {MODULES.find(m => m.id === activeModule)?.name}</h2>
-                <p className="text-natural-text/60 max-w-sm font-medium text-lg italic">
-                  "Información operacional vinculada al esquema SQL de integridad."
-                </p>
-                <div className="grid grid-cols-2 gap-4 pt-12">
-                   <div className="p-6 bg-white border border-natural-border rounded-2xl w-52 text-left shadow-sm">
-                      <div className="w-10 h-10 bg-natural-bg rounded-xl mb-4 flex items-center justify-center shadow-sm"><CheckCircle2 className="w-5 h-5 text-natural-accent" /></div>
-                      <p className="text-[10px] font-black uppercase text-natural-accent mb-1 tracking-widest">Base de Datos</p>
-                      <p className="text-xs font-bold leading-tight">Tablas referenciadas en Supabase</p>
-                   </div>
-                   <div className="p-6 bg-white border border-natural-border rounded-2xl w-52 text-left shadow-sm">
-                      <div className="w-10 h-10 bg-natural-bg rounded-xl mb-4 flex items-center justify-center shadow-sm"><Wrench className="w-5 h-5 text-natural-accent" /></div>
-                      <p className="text-[10px] font-black uppercase text-natural-accent mb-1 tracking-widest">Estructura</p>
-                      <p className="text-xs font-bold leading-tight">Arquitectura modular escalable</p>
-                   </div>
-                </div>
-              </motion.div>
-            )}
+            {renderModuleContent()}
           </AnimatePresence>
         </div>
       </main>

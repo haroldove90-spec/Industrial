@@ -122,3 +122,45 @@ CREATE INDEX idx_production_machine ON production_logs(machine_id);
 CREATE INDEX idx_production_wo ON production_logs(work_order_id);
 CREATE INDEX idx_quality_status ON quality_reports(is_conform);
 CREATE INDEX idx_inventory_stock ON materials(stock_level);
+
+-- FUNCIÓN CORE: Deducción automática de inventario
+-- Se dispara cuando se crea un registro de producción (production_logs)
+CREATE OR REPLACE FUNCTION fn_deduct_inventory()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE materials
+    SET stock_level = stock_level - NEW.quantity_produced
+    WHERE id = NEW.material_id;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tr_on_production_deduct_stock
+AFTER INSERT ON production_logs
+FOR EACH ROW
+EXECUTE FUNCTION fn_deduct_inventory();
+
+-- FUNCIÓN CORE: Registro de No-Conformidad Automática
+-- Si el reporte de calidad es falso (is_conform = false), se bloquea la OT
+CREATE OR REPLACE FUNCTION fn_handle_no_conformity()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.is_conform = FALSE THEN
+        -- Actualizamos el estatus de la OT a 'blocked'
+        UPDATE work_orders
+        SET status = 'blocked'
+        FROM production_logs
+        WHERE work_orders.id = production_logs.work_order_id
+        AND production_logs.id = NEW.production_log_id;
+        
+        -- Aquí se podría disparar una notificación vía Edge Function
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tr_on_quality_failure
+AFTER INSERT ON quality_reports
+FOR EACH ROW
+EXECUTE FUNCTION fn_handle_no_conformity();
