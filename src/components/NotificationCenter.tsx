@@ -43,8 +43,8 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, 
             <div className="p-8 border-b border-white/5 flex justify-between items-center">
               <div>
                  <div className="flex items-center gap-2 mb-1">
-                    <Bell className="w-3 h-3 text-industrial-cyan" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-industrial-cyan">Centro de Notificaciones</span>
+                    <Bell className="w-3 h-3 text-industrial-red" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-industrial-red">Centro de Notificaciones</span>
                  </div>
                  <h2 className="text-2xl font-serif italic text-white">Alertas de Planta</h2>
               </div>
@@ -71,14 +71,14 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, 
                     className={`p-6 rounded-3xl border transition-all cursor-pointer group ${
                       notif.isRead 
                       ? 'bg-industrial-card/20 border-white/5 grayscale' 
-                      : 'bg-industrial-card border-white/10 hover:border-industrial-cyan/30'
+                      : 'bg-industrial-card border-white/10 hover:border-industrial-red/30'
                     }`}
                   >
                     <div className="flex gap-5">
                       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border shrink-0 ${
                         notif.priority === 'high' ? 'bg-industrial-red/10 border-industrial-red/20 text-industrial-red' :
                         notif.priority === 'medium' ? 'bg-industrial-orange/10 border-industrial-orange/20 text-industrial-orange' :
-                        'bg-industrial-cyan/10 border-industrial-cyan/20 text-industrial-cyan'
+                        'bg-industrial-red/10 border-industrial-red/20 text-industrial-red'
                       }`}>
                         <Icon className="w-5 h-5" />
                       </div>
@@ -86,12 +86,12 @@ export const NotificationCenter: React.FC<NotificationCenterProps> = ({ isOpen, 
                         <div className="flex justify-between items-start gap-2 mb-1">
                            <span className="text-[9px] font-black uppercase tracking-widest text-white/30">{notif.type} • {notif.timestamp}</span>
                            {!notif.isRead && (
-                             <div className="w-1.5 h-1.5 rounded-full bg-industrial-cyan animate-pulse"></div>
+                             <div className="w-1.5 h-1.5 rounded-full bg-industrial-red animate-pulse"></div>
                            )}
                         </div>
                         <p className="text-sm text-white/80 font-medium leading-relaxed mb-4">{notif.message}</p>
                         <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                           <button className="flex items-center gap-2 px-4 py-2 bg-industrial-cyan rounded-xl text-[9px] font-black uppercase tracking-widest text-white">
+                           <button className="flex items-center gap-2 px-4 py-2 bg-industrial-red rounded-xl text-[9px] font-black uppercase tracking-widest text-white">
                                Gestionar
                            </button>
                            <button className="flex items-center justify-center p-2 bg-white/5 rounded-xl border border-white/10 text-white/40 hover:text-white transition-colors">

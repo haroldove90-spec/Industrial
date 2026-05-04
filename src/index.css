@@ -5,14 +5,13 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-serif: "Playfair Display", ui-serif, Georgia, serif;
 
-  --color-industrial-bg: #121212;
+  --color-industrial-bg: #524C4C;
   --color-industrial-card: #1E1E1E;
   --color-industrial-red: #ED1C24;
   --color-industrial-orange: #FFB300;
   --color-industrial-green: #00C853;
-  --color-industrial-border: rgba(255, 255, 255, 0.05);
+  --color-industrial-border: rgba(255, 255, 255, 0.1);
   --color-industrial-text-secondary: #888888;
-  --color-industrial-cyan: #2979FF;
   --color-industrial-purple: #9C27B0;
 }
 

@@ -65,6 +65,16 @@ export default function App() {
   const [selectedWO, setSelectedWO] = useState<WorkOrder | null>(null);
   const [currentRole, setCurrentRole] = useState<UserRole>('admin');
 
+  // Simulation state
+  const [simValue, setSimValue] = useState(0);
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      setSimValue(v => (v + 1) % 100);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
   // Filter modules based on current role
   const allowedModules = MODULES.filter(m => m.roles.includes(currentRole));
 
@@ -121,15 +131,18 @@ export default function App() {
                      <div className="text-left w-32 md:w-48">
                         <p className="text-[10px] font-black uppercase text-white/20 mb-1">Progreso</p>
                         <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                           <div className="h-full bg-industrial-red shadow-[0_0_12px_#ED1C24]" style={{ width: `${wo.progress}%` }}></div>
+                           <div 
+                              className="h-full bg-industrial-red shadow-[0_0_12px_#ED1C24] transition-all duration-1000" 
+                              style={{ width: `${Math.min(100, wo.progress + (simValue / 20))}%` }}
+                           ></div>
                         </div>
                      </div>
                      {currentRole === 'operator' && (
-                        <button className="bg-industrial-cyan/10 hover:bg-industrial-cyan text-industrial-cyan hover:text-white px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border border-industrial-cyan/20">
+                        <button className="bg-industrial-red/10 hover:bg-industrial-red text-industrial-red hover:text-white px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border border-industrial-red/20">
                            Gestionar OT
                         </button>
                      )}
-                     <ChevronRight className="hidden lg:block w-5 h-5 text-white/10 group-hover:text-blue-500 transition-colors" />
+                     <ChevronRight className="hidden lg:block w-5 h-5 text-white/10 group-hover:text-industrial-red transition-colors" />
                   </div>
                 </div>
               </div>
@@ -186,12 +199,12 @@ export default function App() {
   return (
     <div className="flex h-screen bg-industrial-bg text-white font-sans selection:bg-industrial-red/30 selection:text-white">
       {/* Floating Demo Role Selector */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] bg-industrial-card/80 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-2 shadow-2xl flex items-center gap-2">
-         <div className="px-4 border-r border-white/10 hidden sm:block">
+      <div className="fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-[300] bg-industrial-card/80 backdrop-blur-2xl border border-white/10 rounded-[1.5rem] sm:rounded-[2rem] p-1.5 sm:p-2 shadow-2xl flex items-center gap-1 sm:gap-2 max-w-[95vw]">
+         <div className="px-3 md:px-4 border-r border-white/10 hidden md:block">
             <span className="text-[7px] font-black uppercase text-white/40 tracking-[0.3em] block mb-0.5">Role Switch</span>
             <span className="text-[9px] font-black text-industrial-red uppercase tracking-widest">{currentRole}</span>
          </div>
-         <div className="flex items-center gap-1">
+         <div className="flex items-center gap-1 sm:gap-1.5">
             {[
               { id: 'admin', label: 'Admin', icon: ShieldCheck },
               { id: 'quality', label: 'QC', icon: CheckCircle2 },
@@ -204,12 +217,12 @@ export default function App() {
                   setActiveModule('dashboard');
                   setIsMobileMenuOpen(false);
                 }}
-                className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 h-[36px] ${
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg sm:rounded-xl text-[8px] sm:text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 sm:gap-2 h-8 sm:h-9 ${
                   currentRole === role.id ? 'bg-industrial-red text-white shadow-lg' : 'text-white/20 hover:text-white/40 hover:bg-white/5'
                 }`}
               >
                 <role.icon className="w-3 h-3" />
-                <span className="hidden xs:inline">{role.label}</span>
+                <span className="xs:inline">{role.label}</span>
               </button>
             ))}
          </div>
@@ -317,13 +330,13 @@ export default function App() {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col overflow-hidden relative">
         {/* Header */}
-        <header className="h-24 flex items-center justify-between px-8 lg:px-12 z-30 sticky top-0 bg-industrial-bg/80 backdrop-blur-xl border-b border-white/5">
-          <div className="flex items-center gap-6 flex-1">
+        <header className="h-20 lg:h-24 flex items-center justify-between px-4 sm:px-8 lg:px-12 z-30 sticky top-0 bg-industrial-bg/80 backdrop-blur-xl border-b border-white/5">
+          <div className="flex items-center gap-4 sm:gap-6 flex-1">
              <button 
               onClick={() => setIsMobileMenuOpen(true)}
-              className="lg:hidden p-3 bg-white/5 rounded-xl text-white/40"
+              className="lg:hidden p-2.5 sm:p-3 bg-white/5 rounded-xl text-white/40 hover:text-white transition-colors"
              >
-                <Menu className="w-6 h-6" />
+                <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
              </button>
              
              {/* Search Bar - Center Left */}
@@ -331,11 +344,19 @@ export default function App() {
                 <span className="text-[10px] font-medium text-white/20 tracking-widest uppercase">Search...</span>
                 <Search className="w-4 h-4 text-white/20 ml-auto" />
              </div>
+
+             {/* Brand Small (Mobile Only) */}
+             <div className="lg:hidden flex items-center gap-2">
+                <div className="w-7 h-7 bg-industrial-red rounded-lg flex items-center justify-center shrink-0">
+                   <Activity className="text-white w-4 h-4" />
+                </div>
+                <span className="font-black text-xs tracking-tighter hidden xs:block">INDUSTRIAL</span>
+             </div>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-3 sm:gap-6">
             {/* Toggle Theme / Settings */}
-            <div className="flex items-center gap-2 bg-white/5 p-1 rounded-full border border-white/10 scale-90">
+            <div className="hidden sm:flex items-center gap-2 bg-white/5 p-1 rounded-full border border-white/10 scale-90">
                <div className="p-2 bg-white/10 rounded-full shadow-lg">
                   <div className="w-4 h-4 bg-white rounded-full"></div>
                </div>
@@ -344,36 +365,36 @@ export default function App() {
                </div>
             </div>
 
-            <div className="flex items-center gap-4 bg-industrial-red/10 border border-industrial-red/20 px-5 py-2 rounded-2xl group cursor-pointer hover:bg-industrial-red/20 transition-all">
-               <div className="w-8 h-8 bg-industrial-red rounded-lg flex items-center justify-center shadow-lg shadow-industrial-red/40">
-                  <Activity className="w-4 h-4 text-white" />
+            <div className="flex items-center gap-2 sm:gap-4 bg-industrial-red/10 border border-industrial-red/20 px-3 sm:px-5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl group cursor-pointer hover:bg-industrial-red/20 transition-all">
+               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-industrial-red rounded-lg flex items-center justify-center shadow-lg shadow-industrial-red/40">
+                  <LogOut className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                </div>
-               <span className="text-[10px] font-black uppercase tracking-widest text-white/90">Logout</span>
+               <span className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest text-white/90">Logout</span>
             </div>
             
             <button 
               onClick={() => setIsNotifCenterOpen(true)}
-              className="p-3 bg-white/5 border border-white/10 rounded-2xl text-white/40 hover:text-white hover:bg-white/10 transition-all relative"
+              className="p-2.5 sm:p-3 bg-white/5 border border-white/10 rounded-xl sm:rounded-2xl text-white/40 hover:text-white hover:bg-white/10 transition-all relative"
             >
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-3 right-3 w-2 h-2 bg-industrial-red rounded-full animate-pulse"></span>
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-industrial-red rounded-full animate-pulse"></span>
             </button>
           </div>
         </header>
 
         {/* Scrolling Content */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-12 space-y-12 pb-24 scrollbar-hide">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-8 lg:p-12 space-y-8 md:space-y-12 pb-32 scrollbar-hide">
           <AnimatePresence mode="wait">
             {renderModuleContent()}
           </AnimatePresence>
 
           {/* Footer Integration */}
-          <footer className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 pb-24">
-             <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-industrial-red mb-1">Industrial Control System</p>
+          <footer className="mt-20 pt-10 border-t border-white/5 flex flex-col xl:flex-row justify-between items-center gap-8 pb-12">
+             <div className="text-center xl:text-left">
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-industrial-red mb-2">Industrial Control System</p>
                 <p className="text-[9px] text-white/20 font-bold uppercase tracking-widest">© 2024 Industrial.C • Versión de Prototipo 1.0</p>
              </div>
-             <div className="flex flex-wrap items-center justify-center gap-8">
+             <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
                 <button 
                   onClick={() => alert("Abriendo Manual Técnico de Industrial Control v1.0...")}
                   className="flex items-center gap-2 group"
@@ -382,13 +403,13 @@ export default function App() {
                    <span className="text-[9px] font-black uppercase text-white/30 tracking-widest group-hover:text-white transition-colors">Ayuda/Soporte</span>
                 </button>
                 <div className="h-4 w-px bg-white/5 hidden sm:block"></div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                    <div className="w-1.5 h-1.5 rounded-full bg-industrial-green animate-pulse shadow-[0_0_8px_#00C85350]"></div>
-                   <span className="text-[9px] font-black uppercase text-white/30 tracking-widest">Conectado a Servidor de Producción - México</span>
+                   <span className="text-[8px] sm:text-[9px] font-black uppercase text-white/30 tracking-widest">Server: MX-P1</span>
                 </div>
-                <div className="flex items-center gap-2">
-                   <div className="w-1.5 h-1.5 rounded-full bg-industrial-red"></div>
-                   <span className="text-[9px] font-black uppercase text-white/30 tracking-widest">Latencia: 18ms</span>
+                <div className="flex items-center gap-3">
+                   <div className="w-px h-3 bg-white/10"></div>
+                   <span className="text-[8px] sm:text-[9px] font-black uppercase text-white/30 tracking-widest">Latencia: 18ms</span>
                 </div>
              </div>
           </footer>
