@@ -7,10 +7,11 @@
 
   --color-industrial-bg: #111111;
   --color-industrial-card: #1c1c1c;
-  --color-industrial-red: #d92b2b;
-  --color-industrial-orange: #f59e0b;
-  --color-industrial-green: #10b981;
-  --color-industrial-border: rgba(255, 255, 255, 0.05);
+  --color-industrial-red: #ED1C24;
+  --color-industrial-orange: #FFB300;
+  --color-industrial-green: #00C853;
+  --color-industrial-border: rgba(255, 255, 255, 0.03);
+  --color-industrial-text-secondary: #888888;
 }
 
 @layer base {

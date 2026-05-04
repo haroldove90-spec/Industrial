@@ -79,12 +79,12 @@ export default function App() {
            className="space-y-6"
         >
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-            <h2 className="text-3xl font-serif italic text-white flex items-center gap-4">
-              <ClipboardCheck className="text-blue-500 w-8 h-8" />
+            <h2 className="text-3xl font-black italic text-white flex items-center gap-4">
+              <ClipboardCheck className="text-industrial-red w-8 h-8" />
               Órdenes de Trabajo
             </h2>
             {currentRole !== 'operator' && (
-              <button className="bg-blue-600 text-white px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-xl shadow-blue-600/20">
+              <button className="bg-industrial-red text-white px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-red-500 transition-all shadow-xl shadow-industrial-red/20">
                 Nueva OT
               </button>
             )}
@@ -94,12 +94,12 @@ export default function App() {
               <div 
                 key={wo.id}
                 onClick={() => setSelectedWO(wo as WorkOrder)}
-                className="bg-[#0a0a0a] p-6 rounded-3xl border border-white/5 hover:border-blue-500/40 transition-all cursor-pointer group backdrop-blur-sm shadow-2xl"
+                className="bg-industrial-card p-6 rounded-3xl border border-white/5 hover:border-industrial-red/40 transition-all cursor-pointer group backdrop-blur-sm shadow-2xl"
               >
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                   <div className="flex items-center gap-5">
-                    <div className="w-14 h-14 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
-                      <ClipboardCheck className="w-6 h-6 text-blue-500" />
+                    <div className="w-14 h-14 bg-industrial-red/10 rounded-2xl flex items-center justify-center border border-industrial-red/20">
+                      <ClipboardCheck className="w-6 h-6 text-industrial-red" />
                     </div>
                     <div>
                       <h4 className="font-bold text-lg text-white tracking-tight">{wo.orderNumber}</h4>
@@ -110,9 +110,9 @@ export default function App() {
                      <div className="text-left">
                         <p className="text-[10px] font-black uppercase text-white/20 mb-1">Status</p>
                         <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded border ${
-                          wo.status === 'in_progress' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 
-                          wo.status === 'completed' ? 'bg-green-500/10 border-green-500/20 text-green-400' :
-                          'bg-yellow-500/10 border-yellow-500/20 text-yellow-400'
+                          wo.status === 'in_progress' ? 'bg-industrial-red/10 border-industrial-red/20 text-industrial-red' : 
+                          wo.status === 'completed' ? 'bg-industrial-green/10 border-industrial-green/20 text-industrial-green' :
+                          'bg-industrial-orange/10 border-industrial-orange/20 text-industrial-orange'
                         }`}>
                           {wo.status.replace('_', ' ')}
                         </span>
@@ -120,7 +120,7 @@ export default function App() {
                      <div className="text-left w-32 md:w-48">
                         <p className="text-[10px] font-black uppercase text-white/20 mb-1">Progreso</p>
                         <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                           <div className="h-full bg-blue-600 shadow-[0_0_12px_rgba(37,99,235,1)]" style={{ width: `${wo.progress}%` }}></div>
+                           <div className="h-full bg-industrial-red shadow-[0_0_12px_#ED1C24]" style={{ width: `${wo.progress}%` }}></div>
                         </div>
                      </div>
                      {currentRole === 'operator' && (
@@ -173,11 +173,11 @@ export default function App() {
 
     return (
       <div className="flex flex-col items-center justify-center h-full text-center p-12">
-        <div className="w-24 h-24 bg-blue-600/10 rounded-3xl flex items-center justify-center mb-8 border border-blue-500/20">
-           {React.createElement(MODULES.find(m => m.id === activeModule)?.icon || LayoutDashboard, { className: "w-10 h-10 text-blue-500" })}
+        <div className="w-24 h-24 bg-industrial-red/10 rounded-3xl flex items-center justify-center mb-8 border border-industrial-red/20 shadow-[0_0_30px_#ED1C2410]">
+           {React.createElement(MODULES.find(m => m.id === activeModule)?.icon || LayoutDashboard, { className: "w-10 h-10 text-industrial-red" })}
         </div>
-        <h2 className="text-3xl font-serif italic text-white mb-4">Módulo de {MODULES.find(m => m.id === activeModule)?.name}</h2>
-        <p className="text-white/40 max-w-sm text-lg italic">Próximamente disponible en la fase de escalabilidad operativa.</p>
+        <h2 className="text-3xl font-black italic text-white mb-4 uppercase tracking-tighter">Módulo {MODULES.find(m => m.id === activeModule)?.name}</h2>
+        <p className="text-white/40 max-w-sm text-lg font-medium italic">Próximamente disponible en la fase de escalabilidad operativa.</p>
       </div>
     );
   };
@@ -232,12 +232,12 @@ export default function App() {
               className="lg:hidden fixed inset-y-0 left-0 z-[60] w-80 bg-[#0a0a0a] border-r border-white/5 flex flex-col shadow-2xl"
             >
                <div className="p-8 border-b border-white/5 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                     <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
-                        <Activity className="text-white w-6 h-6" />
-                     </div>
-                     <span className="font-black text-xl tracking-tighter">INDUSTRIAL<span className="text-blue-500">.C</span></span>
-                  </div>
+             <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-industrial-red rounded-xl flex items-center justify-center shadow-lg shadow-industrial-red/40">
+                   <Activity className="text-white w-6 h-6" />
+                </div>
+                <span className="font-black text-xl tracking-tighter">INDUSTRIAL<span className="text-industrial-red opacity-50">.C</span></span>
+             </div>
                   <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 bg-white/5 rounded-lg text-white/40"><X className="w-5 h-5" /></button>
                </div>
                <nav className="flex-1 overflow-y-auto p-6">
@@ -250,13 +250,13 @@ export default function App() {
                             setSelectedWO(null);
                             setIsMobileMenuOpen(false);
                           }}
-                          className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all ${
-                            activeModule === module.id ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/20' : 'text-white/40 hover:bg-white/5'
-                          }`}
-                        >
-                          <module.icon className="w-5 h-5" />
-                          <span className="text-sm font-bold uppercase tracking-widest">{module.name}</span>
-                        </button>
+                            className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all ${
+                              activeModule === module.id ? 'bg-industrial-red text-white shadow-xl shadow-industrial-red/20' : 'text-white/40 hover:bg-white/5'
+                            }`}
+                          >
+                            <module.icon className="w-5 h-5" />
+                            <span className="text-sm font-black uppercase tracking-widest">{module.name}</span>
+                          </button>
                       </li>
                     ))}
                   </ul>
@@ -270,10 +270,10 @@ export default function App() {
       <motion.aside 
         initial={false}
         animate={{ width: isSidebarOpen ? 120 : 120 }}
-        className="hidden lg:flex flex-col bg-industrial-red m-4 rounded-[3.5rem] z-40 transition-all shadow-[0_0_40px_rgba(217,43,43,0.3)] shrink-0 items-center py-10"
+        className="hidden lg:flex flex-col bg-industrial-card m-4 rounded-[3.5rem] z-40 transition-all shadow-2xl border border-white/5 shrink-0 items-center py-10"
       >
         <div className="mb-12">
-            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md border border-white/10 text-white font-black text-lg">
+            <div className="w-16 h-16 bg-industrial-red rounded-full flex items-center justify-center text-white font-black text-lg shadow-xl shadow-industrial-red/40">
               LD
             </div>
         </div>
@@ -293,7 +293,7 @@ export default function App() {
                       : 'text-white/40 hover:text-white/70 opacity-60'
                   }`}
                 >
-                  <div className={`p-4 rounded-3xl transition-all ${activeModule === module.id ? 'bg-white/20 shadow-lg' : ''}`}>
+                  <div className={`p-4 rounded-3xl transition-all ${activeModule === module.id ? 'bg-industrial-red text-white shadow-lg shadow-industrial-red/40' : 'bg-white/5 group-hover:bg-white/10'}`}>
                     <module.icon className="w-6 h-6" />
                   </div>
                 </button>
@@ -365,7 +365,7 @@ export default function App() {
           {/* Footer Integration */}
           <footer className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 pb-24">
              <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500 mb-1">Industrial Control System</p>
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-industrial-red mb-1">Industrial Control System</p>
                 <p className="text-[9px] text-white/20 font-bold uppercase tracking-widest">© 2024 Industrial.C • Versión de Prototipo 1.0</p>
              </div>
              <div className="flex flex-wrap items-center justify-center gap-8">
@@ -373,16 +373,16 @@ export default function App() {
                   onClick={() => alert("Abriendo Manual Técnico de Industrial Control v1.0...")}
                   className="flex items-center gap-2 group"
                 >
-                   <HelpCircle className="w-4 h-4 text-white/20 group-hover:text-blue-500 transition-colors" />
+                   <HelpCircle className="w-4 h-4 text-white/20 group-hover:text-industrial-red transition-colors" />
                    <span className="text-[9px] font-black uppercase text-white/30 tracking-widest group-hover:text-white transition-colors">Ayuda/Soporte</span>
                 </button>
                 <div className="h-4 w-px bg-white/5 hidden sm:block"></div>
                 <div className="flex items-center gap-2">
-                   <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
+                   <div className="w-1.5 h-1.5 rounded-full bg-industrial-green animate-pulse shadow-[0_0_8px_#00C85350]"></div>
                    <span className="text-[9px] font-black uppercase text-white/30 tracking-widest">Conectado a Servidor de Producción - México</span>
                 </div>
                 <div className="flex items-center gap-2">
-                   <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                   <div className="w-1.5 h-1.5 rounded-full bg-industrial-red"></div>
                    <span className="text-[9px] font-black uppercase text-white/30 tracking-widest">Latencia: 18ms</span>
                 </div>
              </div>
@@ -396,8 +396,8 @@ export default function App() {
       />
 
       {/* Overlay Glow Background Effects */}
-      <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-blue-600/5 blur-[120px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
-      <div className="fixed bottom-0 left-0 w-[400px] h-[400px] bg-blue-900/5 blur-[100px] rounded-full pointer-events-none translate-y-1/3 -translate-x-1/3"></div>
+      <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-industrial-red/5 blur-[120px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+      <div className="fixed bottom-0 left-0 w-[400px] h-[400px] bg-red-900/5 blur-[100px] rounded-full pointer-events-none translate-y-1/3 -translate-x-1/3"></div>
     </div>
   );
 }

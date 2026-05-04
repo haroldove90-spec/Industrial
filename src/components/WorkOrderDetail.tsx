@@ -152,7 +152,7 @@ export default function WorkOrderDetail({ order, onBack }: WorkOrderDetailProps)
               ].map((h, i) => (
                 <div key={i} className="flex gap-6 relative">
                   <div className="text-[10px] font-black text-white/20 w-16 pt-1">{h.time}</div>
-                  <div className="w-2 h-2 rounded-full bg-industrial-red mt-2.5 relative z-10 shrink-0 shadow-[0_0_8px_#d92b2b]"></div>
+                  <div className="w-2 h-2 rounded-full bg-industrial-red mt-2.5 relative z-10 shrink-0 shadow-[0_0_8px_#ED1C24]"></div>
                   {i < 2 && <div className="absolute left-[80px] top-4 w-px h-10 bg-white/5"></div>}
                   <div className="flex-1">
                     <p className="text-sm font-medium text-white/80">{h.event}</p>

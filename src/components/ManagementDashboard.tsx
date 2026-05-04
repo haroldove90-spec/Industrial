@@ -53,14 +53,14 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
     { name: 'Efficiency', value: 35 },
     { name: 'Gap', value: 65 },
   ];
-  const COLORS = ['#d92b2b', '#1c1c1c'];
+  const COLORS = ['#ED1C24', '#1c1c1c'];
 
   const renderAnalytics = () => (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {/* World Map Section - Bento Card */}
-      <div className="lg:col-span-2 md:row-span-2 bg-industrial-card p-8 rounded-[3rem] border border-industrial-border shadow-2xl relative overflow-hidden flex flex-col">
-          <div className="flex justify-between items-center mb-8">
-             <span className="text-[10px] font-black uppercase tracking-widest text-[#e63946] bg-[#e63946]/10 px-4 py-1.5 rounded-full">Buyer Location</span>
+      <div className="lg:col-span-2 md:row-span-2 bg-industrial-card p-10 rounded-[3rem] border border-industrial-border shadow-2xl relative overflow-hidden flex flex-col">
+          <div className="flex justify-between items-center mb-10">
+             <span className="text-[10px] font-black uppercase tracking-widest text-industrial-red bg-industrial-red/10 px-4 py-2 rounded-full">Buyer Location</span>
           </div>
           <div className="flex-1 flex items-center justify-center relative opacity-80 min-h-[300px]">
              {/* Simplified Map Visualization */}
@@ -97,17 +97,17 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
           </div>
       </div>
 
-      {/* Progress Section */}
+       {/* Progress Section */}
       <div className="lg:col-span-1 bg-industrial-card p-10 rounded-[3rem] border border-industrial-border shadow-2xl space-y-10">
-          <div className="flex justify-between items-center">
-             <span className="text-[10px] font-black uppercase tracking-widest text-[#e63946] bg-[#e63946]/10 px-4 py-1.5 rounded-full">Lorem Ipsum</span>
+          <div className="flex justify-between items-center text-white/40">
+             <span className="text-[10px] font-black uppercase tracking-widest text-industrial-red bg-industrial-red/10 px-4 py-2 rounded-full">Performance Metrics</span>
           </div>
           <div className="space-y-8">
              {[
-               { label: 'Lorem Ipsum', value: 80, color: 'bg-industrial-red' },
-               { label: 'Lorem Ipsum', value: 25, color: 'bg-purple-500' },
-               { label: 'Lorem Ipsum', value: 40, color: 'bg-industrial-green' },
-               { label: 'Lorem Ipsum', value: 60, color: 'bg-industrial-orange' }
+               { label: 'OEE Total', value: 88, color: 'bg-industrial-red' },
+               { label: 'Disponibilidad', value: 92, color: 'bg-[#a855f7]' },
+               { label: 'Calidad', value: 98, color: 'bg-industrial-green' },
+               { label: 'Rendimiento', value: 85, color: 'bg-industrial-orange' }
              ].map((item, id) => (
                <div key={id} className="space-y-2">
                   <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-white/40">
@@ -154,10 +154,10 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
           </div>
       </div>
 
-      {/* Stock Doughnut */}
+       {/* Stock Doughnut */}
       <div className="bg-industrial-card p-8 rounded-[3rem] border border-industrial-border shadow-2xl flex flex-col items-center justify-center relative">
           <div className="absolute top-8 left-8">
-             <span className="text-[10px] font-black uppercase tracking-widest text-[#e63946] bg-[#e63946]/10 px-4 py-1.5 rounded-full">Live Information</span>
+             <span className="text-[10px] font-black uppercase tracking-widest text-industrial-red bg-industrial-red/10 px-4 py-1.5 rounded-full">Live Operations</span>
           </div>
           <div className="relative w-48 h-48 mt-10">
             <ResponsiveContainer width="100%" height="100%">
@@ -174,7 +174,7 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
                   dataKey="value"
                   stroke="none"
                 >
-                  <Cell fill="#f59e0b" />
+                  <Cell fill="#ED1C24" />
                   <Cell fill="#1c1c1c" />
                 </Pie>
               </PieChart>
@@ -206,11 +206,11 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
           <div className="h-[250px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={MOCK_OPERATOR_PRODUCTIVITY.slice(0, 4)} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                <Bar dataKey="actual" radius={[4, 4, 0, 0]} barSize={12}>
-                   {MOCK_OPERATOR_PRODUCTIVITY.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={index === 0 ? '#d92b2b' : index === 1 ? '#f59e0b' : index === 2 ? '#10b981' : '#3b82f6'} />
-                    ))}
-                </Bar>
+                 <Bar dataKey="actual" radius={[4, 4, 0, 0]} barSize={12}>
+                    {MOCK_OPERATOR_PRODUCTIVITY.map((_, index) => (
+                       <Cell key={`cell-${index}`} fill={index === 0 ? '#ED1C24' : index === 1 ? '#a855f7' : index === 2 ? '#00C853' : '#FFB300'} />
+                     ))}
+                 </Bar>
                 <XAxis 
                    dataKey="name" 
                    axisLine={false} 

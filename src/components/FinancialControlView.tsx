@@ -26,7 +26,7 @@ import {
 } from 'recharts';
 import { MOCK_FINANCIAL_DATA, MOCK_NON_CONFORMITIES } from '../constants';
 
-const COLORS = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b'];
+const COLORS = ['#ED1C24', '#ff4444', '#00C853', '#FFB300'];
 
 export const FinancialControlView: React.FC = () => {
   const totalCostOfNC = MOCK_NON_CONFORMITIES.reduce((acc, curr) => acc + curr.costImpact, 0);
@@ -50,17 +50,17 @@ export const FinancialControlView: React.FC = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-8 h-px bg-blue-500"></div>
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500">Centro de Control Financiero</span>
+            <div className="w-8 h-px bg-industrial-red"></div>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-industrial-red">Centro de Control Financiero</span>
           </div>
-          <h2 className="text-4xl font-serif italic text-white mb-2">Rentabilidad Operativa</h2>
+          <h2 className="text-4xl font-black italic text-white mb-2 uppercase tracking-tighter">Rentabilidad Operativa</h2>
           <p className="text-white/40 text-sm font-medium">Análisis de costos reales vs presupuestados e impacto de calidad.</p>
         </div>
         <div className="flex gap-4">
            <button className="bg-white/5 hover:bg-white/10 text-white/70 px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest border border-white/10 transition-all">
               Exportar P&L
            </button>
-           <button className="bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all shadow-xl shadow-blue-600/30">
+           <button className="bg-industrial-red hover:bg-red-500 text-white px-6 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all shadow-xl shadow-industrial-red/30">
               Nuevo Presupuesto
            </button>
         </div>
@@ -79,9 +79,9 @@ export const FinancialControlView: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className="bg-[#0a0a0a] border border-white/5 p-8 rounded-3xl shadow-2xl group hover:border-blue-500/20 transition-all"
+            className="bg-industrial-card border border-industrial-border p-8 rounded-3xl shadow-2xl group hover:border-industrial-red/20 transition-all"
           >
-            <div className={`w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-6 border border-white/5 group-hover:border-blue-500/30 transition-all ${kpi.color || 'text-blue-500'}`}>
+            <div className={`w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center mb-6 border border-white/5 group-hover:border-industrial-red/30 transition-all ${kpi.color || 'text-industrial-red'}`}>
               <kpi.icon className="w-5 h-5" />
             </div>
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 mb-2">{kpi.label}</p>
@@ -98,12 +98,12 @@ export const FinancialControlView: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cost vs Budget Chart */}
-        <div className="lg:col-span-2 bg-[#0a0a0a] p-10 rounded-[2.5rem] border border-white/5 shadow-2xl">
+        <div className="lg:col-span-2 bg-industrial-card p-10 rounded-[2.5rem] border border-industrial-border shadow-2xl">
           <div className="flex justify-between items-center mb-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">Comparativa Costo Real vs Presupuesto</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-industrial-red">Comparativa Costo Real vs Presupuesto</h3>
             <div className="flex gap-4">
                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                  <div className="w-2 h-2 rounded-full bg-industrial-red"></div>
                   <span className="text-[9px] font-black uppercase text-white/20 tracking-widest">Presupuesto</span>
                </div>
                <div className="flex items-center gap-2">
@@ -120,19 +120,19 @@ export const FinancialControlView: React.FC = () => {
                   dataKey="name" 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: '#ffffff30', fontSize: 10, fontWeight: 700 }}
+                  tick={{ fill: '#ffffff30', fontSize: 10, fontWeight: 900 }}
                   dy={10}
                 />
                 <YAxis 
                   axisLine={false} 
                   tickLine={false} 
-                  tick={{ fill: '#ffffff30', fontSize: 10, fontWeight: 700 }}
+                  tick={{ fill: '#ffffff30', fontSize: 10, fontWeight: 900 }}
                 />
                 <Tooltip 
                   cursor={{ fill: '#ffffff05' }}
-                  contentStyle={{ backgroundColor: '#0a0a0a', border: '1px solid #ffffff10', borderRadius: '12px' }}
+                  contentStyle={{ backgroundColor: '#111', border: '1px solid #ffffff10', borderRadius: '12px' }}
                 />
-                <Bar dataKey="presupuesto" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={24} />
+                <Bar dataKey="presupuesto" fill="#ED1C24" radius={[4, 4, 0, 0]} barSize={24} />
                 <Bar dataKey="real" fill="#ffffff20" radius={[4, 4, 0, 0]} barSize={24} />
               </BarChart>
             </ResponsiveContainer>
@@ -140,8 +140,8 @@ export const FinancialControlView: React.FC = () => {
         </div>
 
         {/* NC Impact Allocation */}
-        <div className="bg-[#0a0a0a] p-10 rounded-[2.5rem] border border-white/5 shadow-2xl flex flex-col">
-          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500 mb-10">Pérdida por No Calidad</h3>
+        <div className="bg-industrial-card p-10 rounded-[2.5rem] border border-industrial-border shadow-2xl flex flex-col">
+          <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-industrial-red mb-10">Pérdida por No Calidad</h3>
           <div className="flex-1 min-h-[250px]">
              <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -177,9 +177,9 @@ export const FinancialControlView: React.FC = () => {
       </div>
 
       {/* Non-Quality Impact Table */}
-      <div className="bg-[#0a0a0a] rounded-[2.5rem] border border-white/5 overflow-hidden shadow-2xl">
+      <div className="bg-industrial-card rounded-[2.5rem] border border-industrial-border overflow-hidden shadow-2xl">
          <div className="p-8 border-b border-white/5">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">Fugas de Capital por No Conformidad</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-industrial-red">Fugas de Capital por No Conformidad</h3>
          </div>
          <div className="overflow-x-auto">
             <table className="w-full text-left">
