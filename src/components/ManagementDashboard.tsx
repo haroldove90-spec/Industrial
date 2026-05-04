@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   BarChart3, 
@@ -19,7 +19,10 @@ import {
   AlertTriangle,
   Zap,
   CheckCircle2,
-  DollarSign
+  DollarSign,
+  X,
+  ClipboardList,
+  Check
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -48,6 +51,46 @@ interface ManagementDashboardProps {
 export default function ManagementDashboard({ role = 'admin' }: ManagementDashboardProps) {
   const [activeTab, setActiveTab] = useState<'analytics' | 'kanban'>('analytics');
   const isOperator = role === 'operator';
+
+  // Operator Simulation State
+  const [isShiftActive, setIsShiftActive] = useState(false);
+  const [shiftSeconds, setShiftSeconds] = useState(0);
+  const [showFaultModal, setShowFaultModal] = useState(false);
+  const [showChecklistModal, setShowChecklistModal] = useState(false);
+  const [isInspected, setIsInspected] = useState(false);
+  const [isSendingFault, setIsSendingFault] = useState(false);
+  const [checklistProgress, setChecklistProgress] = useState(0);
+
+  useEffect(() => {
+    let interval: any;
+    if (isShiftActive) {
+      interval = setInterval(() => {
+        setShiftSeconds(s => s + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isShiftActive]);
+
+  const formatTime = (totalSeconds: number) => {
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
+
+  const handleReportFault = () => {
+    setIsSendingFault(true);
+    setTimeout(() => {
+      setIsSendingFault(false);
+      setShowFaultModal(false);
+      alert("Alerta enviada correctamente al equipo de mantenimiento.");
+    }, 1500);
+  };
+
+  const completeChecklist = () => {
+    setIsInspected(true);
+    setShowChecklistModal(false);
+  };
 
   const OEE_DATA = [
     { name: 'Efficiency', value: 35 },
@@ -295,23 +338,31 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
       <motion.button 
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        className="h-64 bg-industrial-red rounded-[3rem] flex flex-col items-center justify-center gap-6 shadow-2xl shadow-industrial-red/20 relative overflow-hidden group"
+        onClick={() => setIsShiftActive(!isShiftActive)}
+        className={`h-64 rounded-[3rem] flex flex-col items-center justify-center gap-6 shadow-2xl relative overflow-hidden group transition-colors ${
+          isShiftActive ? 'bg-industrial-green' : 'bg-industrial-red'
+        }`}
       >
         <div className="absolute top-0 right-0 p-8 opacity-20 transform translate-x-4 -translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-700">
            <Zap className="w-48 h-48 text-white" />
         </div>
         <div className="w-20 h-20 bg-white/20 rounded-3xl flex items-center justify-center backdrop-blur-xl">
-           <Timer className="w-10 h-10 text-white" />
+           <Timer className={`w-10 h-10 text-white ${isShiftActive ? 'animate-spin-slow' : ''}`} />
         </div>
         <div className="text-center">
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 mb-2 block">Producción Activa</span>
-          <span className="text-3xl font-black italic text-white uppercase tracking-tighter">REANUDAR TURNO</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 mb-2 block">
+            {isShiftActive ? formatTime(shiftSeconds) : 'Producción Activa'}
+          </span>
+          <span className="text-3xl font-black italic text-white uppercase tracking-tighter">
+            {isShiftActive ? 'PAUSAR TURNO' : 'REANUDAR TURNO'}
+          </span>
         </div>
       </motion.button>
 
       <motion.button 
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        onClick={() => setShowFaultModal(true)}
         className="h-64 bg-industrial-card border border-industrial-border rounded-[3rem] flex flex-col items-center justify-center gap-6 shadow-2xl hover:border-industrial-orange/40 transition-all group"
       >
         <div className="w-20 h-20 bg-industrial-orange/10 rounded-3xl flex items-center justify-center">
@@ -326,16 +377,136 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
       <motion.button 
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        className="h-64 bg-industrial-card border border-industrial-border rounded-[3rem] flex flex-col items-center justify-center gap-6 shadow-2xl hover:border-industrial-green/40 transition-all group"
+        onClick={() => setShowChecklistModal(true)}
+        className={`h-64 border rounded-[3rem] flex flex-col items-center justify-center gap-6 shadow-2xl transition-all group ${
+          isInspected ? 'bg-industrial-green/5 border-industrial-green/40' : 'bg-industrial-card border-industrial-border hover:border-industrial-green/40'
+        }`}
       >
-        <div className="w-20 h-20 bg-industrial-green/10 rounded-3xl flex items-center justify-center">
-           <CheckCircle2 className="w-10 h-10 text-industrial-green" />
+        <div className={`w-20 h-20 rounded-3xl flex items-center justify-center ${isInspected ? 'bg-industrial-green text-white' : 'bg-industrial-green/10 text-industrial-green'}`}>
+           <CheckCircle2 className="w-10 h-10" />
         </div>
         <div className="text-center">
-          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 mb-2 block">Checklist</span>
-          <span className="text-3xl font-black italic text-white group-hover:text-industrial-green transition-colors uppercase tracking-tighter">INSPECCIÓN DIARIA</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 mb-2 block">
+            {isInspected ? 'VERIFICADO HOY' : 'Checklist'}
+          </span>
+          <span className="text-3xl font-black italic text-white group-hover:text-industrial-green transition-colors uppercase tracking-tighter">
+            {isInspected ? 'O.K. CERTIFICADO' : 'INSPECCIÓN DIARIA'}
+          </span>
         </div>
       </motion.button>
+
+      {/* Modals for Simulation */}
+      <AnimatePresence>
+        {showFaultModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[500] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-industrial-card border border-white/10 w-full max-w-lg rounded-[3rem] p-10 shadow-2xl"
+            >
+              <div className="flex justify-between items-center mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-industrial-orange/20 rounded-2xl flex items-center justify-center">
+                    <AlertOctagon className="w-6 h-6 text-industrial-orange" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Reportar Falla Crítica</h3>
+                    <p className="text-[10px] uppercase font-black tracking-widest text-white/20">Aviso Inmediato a Mantenimiento</p>
+                  </div>
+                </div>
+                <button onClick={() => setShowFaultModal(false)} className="text-white/20 hover:text-white transition-colors">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="space-y-4 mb-10">
+                {['Error de Hidráulica', 'Falla Eléctrica (Motores)', 'Desviación de Calidad', 'Falta de Material'].map((issue, idx) => (
+                  <button 
+                    key={idx}
+                    className="w-full text-left p-6 bg-white/5 border border-white/5 rounded-2xl hover:border-industrial-orange/50 hover:bg-industrial-orange/5 transition-all text-sm font-bold flex justify-between items-center group"
+                  >
+                    {issue}
+                    <ChevronRight className="w-4 h-4 text-white/10 group-hover:text-industrial-orange" />
+                  </button>
+                ))}
+              </div>
+
+              <button 
+                onClick={handleReportFault}
+                disabled={isSendingFault}
+                className="w-full bg-industrial-orange text-black font-black uppercase text-xs py-5 rounded-2xl shadow-xl shadow-industrial-orange/20 flex items-center justify-center gap-3"
+              >
+                {isSendingFault ? (
+                   <>
+                    <Timer className="w-4 h-4 animate-spin" />
+                    Enviando Alerta...
+                   </>
+                ) : 'Confirmar Reporte'}
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {showChecklistModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[500] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-industrial-card border border-white/10 w-full max-w-lg rounded-[3rem] p-10 shadow-2xl"
+            >
+              <div className="flex justify-between items-center mb-10">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-industrial-green/20 rounded-2xl flex items-center justify-center">
+                    <ClipboardList className="w-6 h-6 text-industrial-green" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Checklist de Inicio</h3>
+                    <p className="text-[10px] uppercase font-black tracking-widest text-white/20">Inspección de Seguridad Estándar</p>
+                  </div>
+                </div>
+                <button onClick={() => setShowChecklistModal(false)} className="text-white/20 hover:text-white transition-colors">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="space-y-6 mb-12">
+                {[
+                  'Nivel de lubricante verificado',
+                  'Frenos de emergencia operativos',
+                  'Área libre de obstrucciones',
+                  'Equipo de protección colocado'
+                ].map((item, idx) => (
+                  <label key={idx} className="flex items-center gap-4 p-4 bg-white/5 border border-white/5 rounded-2xl cursor-pointer hover:border-industrial-green/30 transition-all group">
+                    <div className="w-6 h-6 rounded-lg border-2 border-white/10 flex items-center justify-center group-hover:border-industrial-green transition-all">
+                       <Check className="w-4 h-4 text-industrial-green opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                    <span className="text-sm font-medium text-white/80">{item}</span>
+                  </label>
+                ))}
+              </div>
+
+              <button 
+                onClick={completeChecklist}
+                className="w-full bg-industrial-green text-black font-black uppercase text-xs py-5 rounded-2xl shadow-xl shadow-industrial-green/20"
+              >
+                Certificar para Operación
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Machine Status for Operator */}
       <div className="lg:col-span-3 bg-industrial-card p-10 rounded-[3.5rem] border border-industrial-border mt-4">

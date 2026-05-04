@@ -26,6 +26,22 @@ export default function NonConformityWorkflow() {
   const [tickets, setTickets] = useState<NonConformity[]>(MOCK_NON_CONFORMITIES);
   const [isCreating, setIsCreating] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<NonConformity | null>(null);
+  const [isClosing, setIsClosing] = useState(false);
+
+  const handleCloseTicket = () => {
+    if (!selectedTicket) return;
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsClosing(false);
+      setTickets(prev => prev.map(t => 
+        t.id === selectedTicket.id 
+          ? { ...t, status: 'resolved' as const } 
+          : t
+      ));
+      setSelectedTicket(prev => prev ? { ...prev, status: 'resolved' as const } : null);
+      alert('Incidencia cerrada. Se han liberado las unidades en cuarentena tras validación técnica.');
+    }, 2000);
+  };
 
   const [newTicket, setNewTicket] = useState({
     orderId: '',
@@ -42,14 +58,14 @@ export default function NonConformityWorkflow() {
       type: newTicket.type,
       description: newTicket.description,
       priority: newTicket.priority,
-      costImpact: 0,
+      costImpact: Math.floor(Math.random() * 5000) + 1000,
       status: 'pending',
       date: TicketDate(),
     };
     setTickets([ticket, ...tickets]);
     setIsCreating(false);
     // Simulating stock deduction logic
-    alert(`LOG: ${newTicket.quantity} unidades de la orden ${newTicket.orderId} movidas a CUARENTENA.`);
+    alert(`BLOQUEO DE INVENTARIO: Se han segregado ${newTicket.quantity} unidades de la orden ${newTicket.orderId} a Cuarentena (Lote: QC-${Math.random().toString(36).substr(2, 6).toUpperCase()})`);
   };
 
   function TicketDate() {

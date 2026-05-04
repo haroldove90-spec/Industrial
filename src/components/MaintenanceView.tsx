@@ -20,6 +20,25 @@ import { Machine } from '../types';
 
 export default function MaintenanceView() {
   const [selectedMachine, setSelectedMachine] = useState<Machine | null>(null);
+  const [isScheduling, setIsScheduling] = useState(false);
+  const [machines, setMachines] = useState<Machine[]>(MOCK_MACHINES);
+
+  const handleScheduleIntervention = () => {
+    if (!selectedMachine) return;
+    
+    setIsScheduling(true);
+    // Simulate server processing
+    setTimeout(() => {
+      setIsScheduling(false);
+      setMachines(prev => prev.map(m => 
+        m.id === selectedMachine.id 
+          ? { ...m, status: 'maintenance' } 
+          : m
+      ));
+      setSelectedMachine(prev => prev ? { ...prev, status: 'maintenance' } : null);
+      alert(`Intervención técnica programada para ${selectedMachine.name}. El equipo ha sido notificado.`);
+    }, 2000);
+  };
 
   return (
     <motion.div 
@@ -47,7 +66,7 @@ export default function MaintenanceView() {
         <div className="lg:col-span-2 space-y-4">
           <h3 className="text-xs font-black uppercase tracking-widest text-industrial-cyan/60 mb-4">Parque de Maquinaria</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {MOCK_MACHINES.map((machine) => (
+            {machines.map((machine) => (
               <div 
                 key={machine.id}
                 onClick={() => setSelectedMachine(machine)}
@@ -59,12 +78,16 @@ export default function MaintenanceView() {
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                    machine.status === 'operational' ? 'bg-industrial-green/10 text-industrial-green' : 'bg-industrial-orange/10 text-industrial-orange'
+                    machine.status === 'operational' ? 'bg-industrial-green/10 text-industrial-green' : 
+                    machine.status === 'maintenance' ? 'bg-industrial-cyan/10 text-industrial-cyan' :
+                    'bg-industrial-orange/10 text-industrial-orange'
                   }`}>
                     <Wrench className="w-5 h-5" />
                   </div>
                   <span className={`text-[8px] font-black uppercase px-2 py-1 rounded border ${
-                    machine.status === 'operational' ? 'bg-industrial-green/10 border-industrial-green text-industrial-green' : 'bg-industrial-orange/10 border-industrial-orange text-industrial-orange'
+                    machine.status === 'operational' ? 'bg-industrial-green/10 border-industrial-green text-industrial-green' : 
+                    machine.status === 'maintenance' ? 'bg-industrial-cyan/10 border-industrial-cyan text-industrial-cyan' :
+                    'bg-industrial-orange/10 border-industrial-orange text-industrial-orange'
                   }`}>
                     {machine.status}
                   </span>
@@ -154,8 +177,16 @@ export default function MaintenanceView() {
                  </p>
               </div>
 
-              <button className="w-full mt-8 bg-industrial-cyan hover:bg-blue-500 text-white font-bold py-4 rounded-2xl text-[10px] uppercase tracking-widest transition-all shadow-xl shadow-industrial-cyan/20">
-                Programar Intervención
+              <button 
+                onClick={handleScheduleIntervention}
+                disabled={isScheduling || selectedMachine.status === 'maintenance'}
+                className={`w-full mt-8 text-white font-bold py-4 rounded-2xl text-[10px] uppercase tracking-widest transition-all shadow-xl ${
+                  selectedMachine.status === 'maintenance'
+                    ? 'bg-white/5 text-white/20 cursor-not-allowed'
+                    : 'bg-industrial-cyan hover:bg-blue-500 shadow-industrial-cyan/20'
+                }`}
+              >
+                {isScheduling ? 'Procesando...' : selectedMachine.status === 'maintenance' ? 'En Mantenimiento' : 'Programar Intervención'}
               </button>
             </motion.div>
           ) : (

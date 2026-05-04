@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Users, 
   Settings, 
@@ -15,7 +15,11 @@ import {
   Search,
   CheckCircle2,
   XCircle,
-  Clock
+  Clock,
+  X,
+  Mail,
+  Shield,
+  ArrowRight
 } from 'lucide-react';
 import { MOCK_USERS } from '../constants';
 import { UserProfile, UserRole } from '../types';
@@ -23,9 +27,20 @@ import { UserProfile, UserRole } from '../types';
 export default function AdminUsersView() {
   const [users, setUsers] = useState<UserProfile[]>(MOCK_USERS);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
+  const [isSendingInvite, setIsSendingInvite] = useState(false);
 
   const toggleUserStatus = (id: string) => {
     setUsers(prev => prev.map(u => u.id === id ? { ...u, isActive: !u.isActive } : u));
+  };
+
+  const handleInvite = () => {
+    setIsSendingInvite(true);
+    setTimeout(() => {
+      setIsSendingInvite(false);
+      setIsInviteModalOpen(false);
+      alert('Invitación enviada correctamente al nuevo usuario.');
+    }, 1500);
   };
 
   const filteredUsers = users.filter(u => 
@@ -159,11 +174,90 @@ export default function AdminUsersView() {
                <h4 className="text-lg font-serif italic text-white">Nuevos Usuarios</h4>
                <p className="text-[10px] text-white/40 uppercase font-black tracking-widest mt-1">Requiere aprobación nivel gerencial</p>
             </div>
-            <button className="bg-industrial-cyan hover:bg-blue-500 text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-xl shadow-industrial-cyan/20 h-[52px]">
+            <button 
+              onClick={() => setIsInviteModalOpen(true)}
+              className="bg-industrial-cyan hover:bg-blue-500 text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-xl shadow-industrial-cyan/20 h-[52px]"
+            >
                Invitar Usuario
             </button>
          </div>
       </div>
+
+      <AnimatePresence>
+        {isInviteModalOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[500] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-industrial-card border border-white/10 w-full max-w-lg rounded-[3rem] p-10 shadow-2xl"
+            >
+              <div className="flex justify-between items-center mb-8">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-industrial-cyan/20 rounded-2xl flex items-center justify-center">
+                    <Mail className="w-6 h-6 text-industrial-cyan" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Invitar Usuario</h3>
+                    <p className="text-[10px] uppercase font-black tracking-widest text-white/20">Control de Acceso Industrial</p>
+                  </div>
+                </div>
+                <button onClick={() => setIsInviteModalOpen(false)} className="text-white/20 hover:text-white transition-colors">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <div className="space-y-6 mb-10">
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase text-white/40 tracking-widest ml-1">Correo Electrónico</label>
+                  <input 
+                    type="email" 
+                    placeholder="usuario@planta.com"
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:border-industrial-cyan outline-none text-white h-[52px]"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[9px] font-black uppercase text-white/40 tracking-widest ml-1">Rol de Acceso</label>
+                  <div className="grid grid-cols-2 gap-4">
+                    {['operator', 'maintenance', 'quality', 'management'].map(role => (
+                      <button 
+                        key={role}
+                        className="flex items-center justify-between p-4 bg-white/5 border border-white/5 rounded-xl hover:border-industrial-cyan/40 transition-all group"
+                      >
+                        <span className="text-[10px] font-bold uppercase text-white/60 group-hover:text-white">{role}</span>
+                        <Shield className="w-3 h-3 text-white/20 group-hover:text-industrial-cyan" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                onClick={handleInvite}
+                disabled={isSendingInvite}
+                className="w-full bg-industrial-cyan text-white font-black uppercase text-xs py-5 rounded-2xl shadow-xl shadow-industrial-cyan/20 flex items-center justify-center gap-3"
+              >
+                {isSendingInvite ? (
+                   <>
+                    <Clock className="w-4 h-4 animate-spin" />
+                    Enviando Invitación...
+                   </>
+                ) : (
+                  <>
+                    Enviar Acceso
+                    <ArrowRight className="w-4 h-4" />
+                  </>
+                )}
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
