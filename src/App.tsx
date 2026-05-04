@@ -26,7 +26,8 @@ import {
   ClipboardCheck,
   BarChart3,
   Activity,
-  Boxes
+  Boxes,
+  ShieldCheck
 } from 'lucide-react';
 import { 
   AreaChart, 
@@ -72,43 +73,55 @@ export default function App() {
            className="space-y-6"
         >
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-            <h2 className="text-3xl font-serif italic text-white">Órdenes de Trabajo</h2>
-            <button className="bg-blue-600 text-white px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-xl shadow-blue-600/20">
-              Nueva OT
-            </button>
+            <h2 className="text-3xl font-serif italic text-white flex items-center gap-4">
+              <ClipboardCheck className="text-blue-500 w-8 h-8" />
+              Órdenes de Trabajo
+            </h2>
+            {currentRole !== 'operator' && (
+              <button className="bg-blue-600 text-white px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-xl shadow-blue-600/20">
+                Nueva OT
+              </button>
+            )}
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
             {MOCK_WORK_ORDERS.map((wo) => (
               <div 
                 key={wo.id}
                 onClick={() => setSelectedWO(wo as WorkOrder)}
-                className="bg-white/5 p-6 rounded-2xl border border-white/5 hover:border-blue-500/40 transition-all cursor-pointer group backdrop-blur-sm"
+                className="bg-[#0a0a0a] p-6 rounded-3xl border border-white/5 hover:border-blue-500/40 transition-all cursor-pointer group backdrop-blur-sm shadow-2xl"
               >
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                   <div className="flex items-center gap-5">
-                    <div className="w-12 h-12 bg-blue-600/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+                    <div className="w-14 h-14 bg-blue-600/10 rounded-2xl flex items-center justify-center border border-blue-500/20">
                       <ClipboardCheck className="w-6 h-6 text-blue-500" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-lg text-white">{wo.orderNumber}</h4>
-                      <p className="text-[10px] font-black uppercase text-white/30 tracking-widest">{wo.client}</p>
+                      <h4 className="font-bold text-lg text-white tracking-tight">{wo.orderNumber}</h4>
+                      <p className="text-[10px] font-black uppercase text-white/30 tracking-widest leading-none mt-1">{wo.client}</p>
                     </div>
                   </div>
                   <div className="flex flex-wrap items-center gap-8">
                      <div className="text-left">
                         <p className="text-[10px] font-black uppercase text-white/20 mb-1">Status</p>
-                        <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded border ${
-                          wo.status === 'in_progress' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400'
+                        <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded border ${
+                          wo.status === 'in_progress' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 
+                          wo.status === 'completed' ? 'bg-green-500/10 border-green-500/20 text-green-400' :
+                          'bg-yellow-500/10 border-yellow-500/20 text-yellow-400'
                         }`}>
                           {wo.status.replace('_', ' ')}
                         </span>
                      </div>
-                     <div className="text-left w-32">
+                     <div className="text-left w-32 md:w-48">
                         <p className="text-[10px] font-black uppercase text-white/20 mb-1">Progreso</p>
-                        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                           <div className="h-full bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.5)]" style={{ width: `${wo.progress}%` }}></div>
+                        <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                           <div className="h-full bg-blue-600 shadow-[0_0_12px_rgba(37,99,235,1)]" style={{ width: `${wo.progress}%` }}></div>
                         </div>
                      </div>
+                     {currentRole === 'operator' && (
+                        <button className="bg-blue-600/10 hover:bg-blue-600 text-blue-500 hover:text-white px-6 py-3 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border border-blue-500/20">
+                           Gestionar OT
+                        </button>
+                     )}
                      <ChevronRight className="hidden lg:block w-5 h-5 text-white/10 group-hover:text-blue-500 transition-colors" />
                   </div>
                 </div>
@@ -129,106 +142,12 @@ export default function App() {
     if (activeModule === 'dashboard') {
       return (
         <motion.div
-          key="dashboard-view"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -15 }}
-          className="space-y-8"
+           key="dashboard-view"
+           initial={{ opacity: 0, y: 15 }}
+           animate={{ opacity: 1, y: 0 }}
+           exit={{ opacity: 0, y: -15 }}
         >
-          {/* KPI Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="bg-[#0a0a0a] border border-white/5 p-8 rounded-3xl shadow-xl hover:border-blue-500/20 transition-all group">
-              <div className="text-[10px] font-black uppercase text-blue-500 mb-4 tracking-[0.2em]">Eficiencia (OEE)</div>
-              <div className="flex items-end gap-3">
-                <p className="text-4xl font-light text-white">84.2%</p>
-                <div className="mb-1 flex items-center gap-1 text-[10px] font-bold text-green-500">
-                  <TrendingUp className="w-3 h-3" />
-                  ↑ 2.1%
-                </div>
-              </div>
-              <p className="text-[10px] text-white/20 italic mt-4 uppercase font-bold tracking-tight">Rendimiento óptimo en Línea A</p>
-            </div>
-            <div className="bg-[#0a0a0a] border border-white/5 p-8 rounded-3xl shadow-xl hover:border-blue-500/20 transition-all group">
-              <div className="text-[10px] font-black uppercase text-blue-500 mb-4 tracking-[0.2em]">No Conformidades</div>
-              <div className="flex items-end gap-3">
-                <p className="text-4xl font-light text-white">1.28%</p>
-                <div className="mb-1 flex items-center gap-1 text-[10px] font-bold text-red-500">
-                  <ArrowDownRight className="w-3 h-3" />
-                  ↓ 0.4%
-                </div>
-              </div>
-              <p className="text-[10px] text-white/20 italic mt-4 uppercase font-bold tracking-tight">Meta: &lt; 2.0%</p>
-            </div>
-            <div className="bg-[#0a0a0a] border border-white/5 p-8 rounded-3xl shadow-xl hover:border-blue-500/20 transition-all group lg:col-span-1 sm:col-span-2">
-              <div className="text-[10px] font-black uppercase text-blue-500 mb-4 tracking-[0.2em]">Stock Crítico</div>
-              <div className="flex items-end gap-3">
-                <p className="text-4xl font-light text-white">12 <span className="text-lg">SKUs</span></p>
-                <div className="mb-1 text-[10px] font-bold text-orange-500 uppercase tracking-tighter bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20">
-                  8 ALERTAS
-                </div>
-              </div>
-              <p className="text-[10px] text-white/20 italic mt-4 uppercase font-bold tracking-tight">Reponer antes de 48h</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 xl:grid-cols-5 gap-8">
-            <div className="xl:col-span-3 bg-[#0a0a0a] p-10 rounded-3xl border border-white/5 shadow-2xl flex flex-col">
-              <div className="flex justify-between items-center mb-10">
-                <h2 className="text-lg font-bold tracking-tight text-white uppercase tracking-widest text-[12px] text-blue-500">Flujo de Trazabilidad Activo</h2>
-                <span className="text-[9px] bg-blue-600/10 border border-blue-500/20 px-3 py-1 rounded-full text-blue-500 font-black uppercase tracking-widest">Real-Time Data Feed</span>
-              </div>
-              <div className="flex-1 flex flex-col justify-center gap-6">
-                <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-2xl border-2 border-blue-600/40 flex items-center justify-center text-blue-500 font-bold shadow-xl bg-blue-600/5 transition-transform hover:scale-105">01</div>
-                  <div className="flex-1 p-5 bg-white/5 rounded-2xl border-l-4 border-blue-600 backdrop-blur-md">
-                    <div className="text-[9px] font-black uppercase text-white/20 tracking-[0.2em] mb-1">Entrada Materia Prima</div>
-                    <div className="text-xs text-white/70 font-bold uppercase tracking-tight">Lote #MP-9942 - Acero Inoxidable 304</div>
-                  </div>
-                </div>
-                <div className="w-0.5 h-8 bg-blue-600/20 ml-[27px]"></div>
-                <div className="flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-2xl border-2 border-blue-600/40 flex items-center justify-center text-blue-500 font-bold shadow-xl bg-blue-600/5 transition-transform hover:scale-105">02</div>
-                  <div className="flex-1 p-5 bg-white/5 rounded-2xl border-l-4 border-blue-600 backdrop-blur-md">
-                    <div className="text-[9px] font-black uppercase text-white/20 tracking-[0.2em] mb-1">Procesamiento y Corte</div>
-                    <div className="text-xs text-white/70 font-bold uppercase tracking-tight">Maquinaria: CNC-04 | Operario: C. Ruiz</div>
-                  </div>
-                </div>
-                <div className="w-0.5 h-8 bg-blue-600/20 ml-[27px]"></div>
-                <div className="flex items-center gap-6 opacity-30">
-                  <div className="w-14 h-14 rounded-2xl border-2 border-white/5 flex items-center justify-center text-white/20 font-bold">03</div>
-                  <div className="flex-1 p-5 border border-white/5 bg-white/[0.02] rounded-2xl">
-                    <div className="text-[9px] font-black uppercase tracking-[0.2em] mb-1 text-white/20">Validación de Calidad</div>
-                    <div className="text-xs text-white/10 uppercase font-black">Pendiente de escaneo dimensional</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="xl:col-span-2 bg-gradient-to-br from-[#0a0a0a] to-[#010b1a] p-10 rounded-3xl border border-blue-500/20 shadow-[0_0_50px_rgba(37,99,235,0.1)] text-white flex flex-col">
-              <div className="flex items-center gap-3 mb-8">
-                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
-                  <Database className="w-5 h-5 text-white" />
-                </div>
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">Core Industrial</h3>
-              </div>
-              <div className="space-y-4 font-mono text-[11px] opacity-90 flex-1 overflow-auto scrollbar-hide">
-                <div className="p-4 bg-black/40 rounded-xl border border-white/5 shadow-inner">
-                  <span className="text-blue-400 font-bold">SELECT</span> * <span className="text-blue-400">FROM</span> production<br/>
-                  <span className="text-blue-400">WHERE</span> efficiency &gt; 80<br/>
-                  <span className="text-blue-400">ORDER BY</span> timestamp <span className="text-blue-400">DESC</span>;
-                </div>
-                <div className="p-4 bg-black/40 rounded-xl border border-white/5 shadow-inner">
-                  <span className="text-[#fbbf24] uppercase">SCHEMA</span> traceability (<br/>
-                  &nbsp;&nbsp;id uuid <span className="text-blue-300">PRIMARY KEY</span>,<br/>
-                  &nbsp;&nbsp;logs <span className="text-blue-300">JSONB</span>,<br/>
-                  &nbsp;&nbsp;verified <span className="text-blue-300">BOOLEAN</span><br/>
-                  );
-                </div>
-              </div>
-              <p className="text-[12px] leading-relaxed italic text-blue-200/50 mt-10 font-medium">
-                Arquitectura de baja latencia con <span className="text-blue-400">Supabase Realtime</span> para monitoreo de planta crítico.
-              </p>
-            </div>
-          </div>
+           <ManagementDashboard role={currentRole} />
         </motion.div>
       );
     }
@@ -245,7 +164,37 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen bg-[#050505] text-white font-sans selection:bg-blue-600/30 selection:text-white">
+    <div className="flex h-screen bg-black text-white font-sans selection:bg-blue-600/30 selection:text-white">
+      {/* Floating Demo Role Selector */}
+      <div className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[300] bg-[#0a0a0a]/80 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-3 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center gap-3">
+         <div className="px-5 border-r border-white/10 hidden sm:block">
+            <span className="text-[7px] font-black uppercase text-white/40 tracking-[0.3em] block mb-0.5">Demo Control</span>
+            <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest">{currentRole}</span>
+         </div>
+         <div className="flex items-center gap-2">
+            {[
+              { id: 'admin', label: 'Admin Planta', icon: ShieldCheck },
+              { id: 'quality', label: 'Calidad', icon: CheckCircle2 },
+              { id: 'operator', label: 'Operario', icon: Activity }
+            ].map((role) => (
+              <button 
+                key={role.id}
+                onClick={() => {
+                  setCurrentRole(role.id as UserRole);
+                  setActiveModule('dashboard');
+                  setIsMobileMenuOpen(false);
+                }}
+                className={`px-5 py-3 rounded-2xl text-[9px] font-black uppercase tracking-widest transition-all flex items-center gap-2 h-[44px] ${
+                  currentRole === role.id ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/30' : 'text-white/20 hover:text-white/40 hover:bg-white/5'
+                }`}
+              >
+                <role.icon className="w-3 h-3" />
+                <span className="hidden xs:inline">{role.label}</span>
+              </button>
+            ))}
+         </div>
+      </div>
+
       {/* Mobile Sidebar */}
       <AnimatePresence>
         {isMobileMenuOpen && (
@@ -419,19 +368,19 @@ export default function App() {
           </AnimatePresence>
 
           {/* Footer Integration */}
-          <footer className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 pb-12">
+          <footer className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 pb-24">
              <div>
                 <p className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500 mb-1">Industrial Control System</p>
                 <p className="text-[9px] text-white/20 font-bold uppercase tracking-widest">© 2024 Industrial.C • Versión de Prototipo 1.0</p>
              </div>
              <div className="flex items-center gap-8">
                 <div className="flex items-center gap-2">
-                   <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-                   <span className="text-[9px] font-black uppercase text-white/30 tracking-widest">Encrypted Stream</span>
+                   <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]"></div>
+                   <span className="text-[9px] font-black uppercase text-white/30 tracking-widest">Conectado a Servidor de Producción - México</span>
                 </div>
                 <div className="flex items-center gap-2">
                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
-                   <span className="text-[9px] font-black uppercase text-white/30 tracking-widest">Supabase Node: US-West</span>
+                   <span className="text-[9px] font-black uppercase text-white/30 tracking-widest">Latencia: 18ms</span>
                 </div>
              </div>
           </footer>

@@ -17,7 +17,8 @@ import {
   ShieldAlert,
   ArrowRightCircle,
   AlertTriangle,
-  Zap
+  Zap,
+  CheckCircle2
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -228,6 +229,86 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
     );
   };
 
+  const renderOperatorPanel = () => (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <motion.button 
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="h-64 bg-blue-600 rounded-[2.5rem] flex flex-col items-center justify-center gap-6 shadow-2xl shadow-blue-600/40 relative overflow-hidden group"
+      >
+        <div className="absolute top-0 right-0 p-8 opacity-20 transform translate-x-4 -translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-700">
+           <Zap className="w-48 h-48 text-white" />
+        </div>
+        <div className="w-20 h-20 bg-white/20 rounded-3xl flex items-center justify-center backdrop-blur-xl">
+           <Timer className="w-10 h-10 text-white" />
+        </div>
+        <div className="text-center">
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/60 mb-2 block">Producción Activa</span>
+          <span className="text-3xl font-serif italic text-white">REANUDAR TURNO</span>
+        </div>
+      </motion.button>
+
+      <motion.button 
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="h-64 bg-[#0a0a0a] border border-white/10 rounded-[2.5rem] flex flex-col items-center justify-center gap-6 shadow-2xl hover:border-orange-500/40 transition-all group"
+      >
+        <div className="w-20 h-20 bg-orange-500/10 rounded-3xl flex items-center justify-center">
+           <AlertTriangle className="w-10 h-10 text-orange-500" />
+        </div>
+        <div className="text-center">
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 mb-2 block">Mantenimiento</span>
+          <span className="text-3xl font-serif italic text-white group-hover:text-orange-500 transition-colors">REPORTAR FALLA</span>
+        </div>
+      </motion.button>
+
+      <motion.button 
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="h-64 bg-[#0a0a0a] border border-white/10 rounded-[2.5rem] flex flex-col items-center justify-center gap-6 shadow-2xl hover:border-green-500/40 transition-all group"
+      >
+        <div className="w-20 h-20 bg-green-500/10 rounded-3xl flex items-center justify-center">
+           <CheckCircle2 className="w-10 h-10 text-green-500" />
+        </div>
+        <div className="text-center">
+          <span className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20 mb-2 block">Checklist</span>
+          <span className="text-3xl font-serif italic text-white group-hover:text-green-500 transition-colors">INSPECCIÓN DIARIA</span>
+        </div>
+      </motion.button>
+
+      {/* Machine Status for Operator */}
+      <div className="lg:col-span-3 bg-[#0a0a0a] p-10 rounded-[3rem] border border-white/5 mt-4">
+         <div className="flex flex-col md:flex-row justify-between items-center gap-8">
+            <div className="flex items-center gap-8">
+               <div className="w-24 h-24 bg-blue-600/10 rounded-[2rem] flex items-center justify-center border-2 border-blue-600/20">
+                  <Zap className="w-10 h-10 text-blue-600" />
+               </div>
+               <div>
+                  <h3 className="text-3xl font-serif italic text-white mb-2">Máquina Activa: Torno CNC-04</h3>
+                  <div className="flex items-center gap-4">
+                     <span className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-green-500">
+                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div> Operación Estable
+                     </span>
+                     <span className="text-white/20">|</span>
+                     <span className="text-[10px] font-black uppercase tracking-widest text-white/40">OEE Máquina: 88%</span>
+                  </div>
+               </div>
+            </div>
+            <div className="flex gap-4">
+               <div className="px-8 py-4 bg-white/5 rounded-2xl border border-white/10 text-center">
+                  <p className="text-[9px] font-black uppercase text-white/20 mb-1 tracking-widest">Piezas Producidas</p>
+                  <p className="text-2xl font-bold">142/200</p>
+               </div>
+               <div className="px-8 py-4 bg-white/5 rounded-2xl border border-white/10 text-center">
+                  <p className="text-[9px] font-black uppercase text-white/20 mb-1 tracking-widest">Tiempo de Ciclo</p>
+                  <p className="text-2xl font-bold">04:12 <span className="text-xs text-white/30 font-medium">min</span></p>
+               </div>
+            </div>
+         </div>
+      </div>
+    </div>
+  );
+
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -239,54 +320,65 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
         <div>
           <div className="flex items-center gap-3 mb-2">
             <div className="w-8 h-px bg-blue-500"></div>
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500">Control Gerencial</span>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500">
+              {isOperator ? 'Terminal de Planta' : 'Control Gerencial'}
+            </span>
           </div>
-          <h1 className="text-5xl font-serif italic mb-2">Industrial Control V.2</h1>
-          <p className="text-white/40 text-sm font-medium">Análisis de rendimiento, rentabilidad y aseguramiento de calidad.</p>
+          <h1 className="text-5xl font-serif italic mb-2">
+            {isOperator ? 'Industrial Control Panel' : 'Industrial Control V.2'}
+          </h1>
+          <p className="text-white/40 text-sm font-medium">
+            {isOperator 
+              ? 'Interfaz simplificada para operación y registro táctil en planta.' 
+              : 'Análisis de rendimiento, rentabilidad y aseguramiento de calidad.'
+            }
+          </p>
         </div>
 
-        <div className="flex items-center gap-4">
-           <div className="flex bg-[#111] p-1 rounded-full border border-white/10">
-              <button 
-                onClick={() => setActiveTab('analytics')}
-                className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
-                  activeTab === 'analytics' ? 'bg-blue-600 text-white shadow-lg' : 'text-white/40 hover:text-white'
-                }`}
-              >
-                Analítica
-              </button>
-              <button 
-                onClick={() => setActiveTab('kanban')}
-                className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
-                  activeTab === 'kanban' ? 'bg-blue-600 text-white shadow-lg' : 'text-white/40 hover:text-white'
-                }`}
-              >
-                No Conformidades
-              </button>
-           </div>
-           
-           <div className="h-10 w-px bg-white/10 mx-2"></div>
+        {!isOperator && (
+          <div className="flex items-center gap-4">
+            <div className="flex bg-[#111] p-1 rounded-full border border-white/10">
+                <button 
+                  onClick={() => setActiveTab('analytics')}
+                  className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                    activeTab === 'analytics' ? 'bg-blue-600 text-white shadow-lg' : 'text-white/40 hover:text-white'
+                  }`}
+                >
+                  Analítica
+                </button>
+                <button 
+                  onClick={() => setActiveTab('kanban')}
+                  className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
+                    activeTab === 'kanban' ? 'bg-blue-600 text-white shadow-lg' : 'text-white/40 hover:text-white'
+                  }`}
+                >
+                  No Conformidades
+                </button>
+            </div>
+            
+            <div className="h-10 w-px bg-white/10 mx-2"></div>
 
-           <div className="flex gap-2">
-              <button className="p-3 bg-[#111] rounded-xl border border-white/10 hover:border-[#D4AF37]/40 transition-all group">
-                <FileDown className="w-5 h-5 text-white/40 group-hover:text-[#D4AF37]" />
-              </button>
-              <button className="p-3 bg-[#111] rounded-xl border border-white/10 hover:border-[#D4AF37]/40 transition-all group">
-                <Share2 className="w-5 h-5 text-white/40 group-hover:text-[#D4AF37]" />
-              </button>
-           </div>
-        </div>
+            <div className="flex gap-2">
+                <button className="p-3 bg-[#111] rounded-xl border border-white/10 hover:border-[#D4AF37]/40 transition-all group">
+                  <FileDown className="w-5 h-5 text-white/40 group-hover:text-[#D4AF37]" />
+                </button>
+                <button className="p-3 bg-[#111] rounded-xl border border-white/10 hover:border-[#D4AF37]/40 transition-all group">
+                  <Share2 className="w-5 h-5 text-white/40 group-hover:text-[#D4AF37]" />
+                </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <AnimatePresence mode="wait">
         <motion.div
-           key={activeTab}
+           key={activeTab + (isOperator ? '-op' : '-mgmt')}
            initial={{ opacity: 0, y: 20 }}
            animate={{ opacity: 1, y: 0 }}
            exit={{ opacity: 0, y: -20 }}
            transition={{ duration: 0.4 }}
         >
-          {activeTab === 'analytics' ? renderAnalytics() : renderKanban()}
+          {isOperator ? renderOperatorPanel() : (activeTab === 'analytics' ? renderAnalytics() : renderKanban())}
         </motion.div>
       </AnimatePresence>
 

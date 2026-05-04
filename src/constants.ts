@@ -40,11 +40,11 @@ export interface Module {
 
 export const MODULES: Module[] = [
   { id: 'dashboard', name: 'Resumen', icon: Activity, description: 'Vista general del sistema', roles: ['admin', 'management', 'operator', 'quality', 'maintenance'] },
-  { id: 'orders', name: 'Producción', icon: ClipboardCheck, description: 'Gestión de OT y planificación', roles: ['admin', 'operator', 'management'] },
-  { id: 'inventory', name: 'Almacén', icon: Package, description: 'Control de stock y materias primas', count: 'Low', roles: ['admin', 'operator', 'management'] },
-  { id: 'quality', name: 'Calidad (NC)', icon: ShieldCheck, description: 'Gestión de No Conformidades', count: 3, roles: ['admin', 'quality', 'management'] },
-  { id: 'maintenance', name: 'Mantenimiento', icon: Wrench, description: 'Planes preventivos y herramientas', roles: ['admin', 'maintenance', 'management'] },
-  { id: 'workforce', name: 'Operarios', icon: Users, description: 'Gestión de personal y Check-in', count: '80%', roles: ['admin', 'management'] },
+  { id: 'orders', name: 'Producción', icon: ClipboardCheck, description: 'Gestión de OT y planificación', roles: ['admin', 'operator'] },
+  { id: 'inventory', name: 'Almacén', icon: Package, description: 'Control de stock y materias primas', count: 'Low', roles: ['admin'] },
+  { id: 'quality', name: 'Calidad (NC)', icon: ShieldCheck, description: 'Gestión de No Conformidades', count: 3, roles: ['admin', 'quality'] },
+  { id: 'maintenance', name: 'Mantenimiento', icon: Wrench, description: 'Planes preventivos y herramientas', roles: ['admin', 'maintenance', 'operator'] },
+  { id: 'workforce', name: 'Operarios', icon: Users, description: 'Gestión de personal y Check-in', count: '80%', roles: ['admin', 'operator'] },
   { id: 'blueprints', name: 'Planos Técnicos', icon: FileText, description: 'Catálogo de especificaciones', roles: ['admin', 'operator', 'quality', 'maintenance'] },
   { id: 'reports', name: 'Gerencia', icon: BarChart3, description: 'KPIs, OEE y Análisis de Calidad', roles: ['admin', 'management'] },
   { id: 'admin', name: 'Usuarios', icon: Settings, description: 'Gestión de accesos y roles', roles: ['admin'] },
@@ -74,9 +74,10 @@ export const MOCK_QUALITY_DATA = [
 
 export const MOCK_INVENTORY_LEVELS = [
   { item: 'Acero Inox 304', stock: 12, min: 20 },
-  { item: 'Aluminio 6061', stock: 8, min: 15 },
-  { item: 'Electrodos E6013', stock: 45, min: 100 },
+  { item: 'Aluminio 6061', stock: 5, min: 15 }, // Low Stock
+  { item: 'Electrodos E6013', stock: 145, min: 100 },
   { item: 'Pernos M12', stock: 150, min: 200 },
+  { item: 'Refrigerante CNC', stock: 85, min: 50 },
 ];
 
 export const MOCK_WORK_ORDERS = [
@@ -86,23 +87,35 @@ export const MOCK_WORK_ORDERS = [
     client: 'Industrial S.A.',
     status: 'in_progress' as const,
     priority: 'high' as const,
-    machine: 'CNC-04',
+    machine: 'Torno CNC-04',
     operator: 'Carlos Ruiz',
     materialUsed: 'Acero Inox 304',
     batchNumber: 'BATCH-2024-A9',
-    progress: 65,
+    progress: 45,
   },
   {
     id: 'wo-2',
     orderNumber: 'OT-2024-002',
     client: 'MetalMec Ltd.',
-    status: 'quality_check' as const,
+    status: 'pending' as const,
     priority: 'urgent' as const,
-    machine: 'TOR-02',
+    machine: 'Fresadora CNC-01',
     operator: 'Ana Beltrán',
     materialUsed: 'Aluminio 6061',
     batchNumber: 'BATCH-2024-B1',
-    progress: 95,
+    progress: 0,
+  },
+  {
+    id: 'wo-3',
+    orderNumber: 'OT-2024-003',
+    client: 'Gestamp Group',
+    status: 'completed' as const,
+    priority: 'medium' as const,
+    machine: 'Prensa Hidráulica',
+    operator: 'Miguel Angel',
+    materialUsed: 'Acero Galva',
+    batchNumber: 'BATCH-2024-C5',
+    progress: 100,
   },
 ];
 
@@ -125,28 +138,33 @@ export const MOCK_QUALITY_HEATMAP = [
 export const MOCK_MACHINES: Machine[] = [
   {
     id: 'm-1',
-    name: 'CNC-04',
-    type: 'Centro de Mecanizado',
+    name: 'Torno CNC-04',
+    type: 'Torno CNC',
     status: 'operational',
     lastMaintenance: '2024-04-15',
     nextMaintenance: '2024-05-15',
     oee: 88,
-    repairHistory: [
-      { date: '2024-01-10', description: 'Cambio de husillo', cost: 1200 },
-      { date: '2023-11-20', description: 'Calibración ejes X/Y', cost: 450 },
-    ]
+    repairHistory: []
   },
   {
     id: 'm-2',
-    name: 'TOR-01',
-    type: 'Torno Paralelo',
-    status: 'maintenance',
+    name: 'Fresadora CNC-01',
+    type: 'Fresadora',
+    status: 'operational',
     lastMaintenance: '2024-03-20',
+    nextMaintenance: '2024-06-01',
+    oee: 82,
+    repairHistory: []
+  },
+  {
+    id: 'm-3',
+    name: 'Prensa 500T',
+    type: 'Prensa Hidráulica',
+    status: 'maintenance',
+    lastMaintenance: '2024-05-01',
     nextMaintenance: '2024-05-04',
-    oee: 72,
-    repairHistory: [
-      { date: '2024-05-01', description: 'Ruido excesivo motor principal', cost: 800 },
-    ]
+    oee: 65,
+    repairHistory: []
   }
 ];
 
