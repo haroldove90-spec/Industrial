@@ -37,10 +37,15 @@ import {
   MOCK_QUALITY_HEATMAP, 
   MOCK_NON_CONFORMITIES 
 } from '../constants';
-import { NonConformity } from '../types';
+import { NonConformity, UserRole } from '../types';
 
-export default function ManagementDashboard() {
+interface ManagementDashboardProps {
+  role?: UserRole;
+}
+
+export default function ManagementDashboard({ role = 'admin' }: ManagementDashboardProps) {
   const [activeTab, setActiveTab] = useState<'analytics' | 'kanban'>('analytics');
+  const isOperator = role === 'operator';
 
   const OEE_DATA = [
     { name: 'Efficiency', value: 84.2 },
@@ -200,7 +205,9 @@ export default function ManagementDashboard() {
                     }`}>
                       {nc.priority}
                     </span>
-                    <span className="text-[10px] font-mono text-blue-500 font-bold">${nc.costImpact.toLocaleString()} lost</span>
+                    {!isOperator && (
+                      <span className="text-[10px] font-mono text-blue-500 font-bold">${nc.costImpact.toLocaleString()} lost</span>
+                    )}
                   </div>
                   <h5 className="text-sm font-medium text-white/90 mb-4 group-hover:text-white transition-colors">{nc.description}</h5>
                   <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/[0.05]">

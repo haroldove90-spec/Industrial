@@ -14,7 +14,10 @@ import {
   FileText,
   Calendar,
   QrCode,
-  Search
+  Search,
+  ShieldCheck,
+  Activity,
+  AlertOctagon
 } from 'lucide-react';
 import { 
   OperatorProductivity, 
@@ -22,7 +25,8 @@ import {
   Machine, 
   MaintenanceSchedule, 
   Blueprint,
-  AttendanceRecord 
+  AttendanceRecord,
+  UserProfile
 } from './types';
 
 export interface Module {
@@ -30,17 +34,28 @@ export interface Module {
   name: string;
   icon: LucideIcon;
   description: string;
-  count?: number;
+  count?: string | number | null;
+  roles: string[];
 }
 
 export const MODULES: Module[] = [
-  { id: 'dashboard', name: 'Dashboard', icon: LayoutDashboard, description: 'Vista general del sistema' },
-  { id: 'work-orders', name: 'Órdenes de Trabajo', icon: ClipboardCheck, description: 'Gestión de OT y planificación' },
-  { id: 'inventory', name: 'Inventario Crítico', icon: Package, description: 'Control de stock y materias primas', count: 12 },
-  { id: 'maintenance', name: 'Mantenimiento', icon: Settings, description: 'Planes preventivos y herramientas' },
-  { id: 'workforce', name: 'Operarios', icon: Users, description: 'Gestión de personal y Check-in' },
-  { id: 'blueprints', name: 'Planos Técnicos', icon: FileText, description: 'Catálogo de especificaciones' },
-  { id: 'reports', name: 'Reportes Gerenciales', icon: BarChart3, description: 'KPIs, OEE y Análisis de Calidad' },
+  { id: 'dashboard', name: 'Resumen', icon: Activity, description: 'Vista general del sistema', roles: ['admin', 'management', 'operator', 'quality', 'maintenance'] },
+  { id: 'orders', name: 'Producción', icon: ClipboardCheck, description: 'Gestión de OT y planificación', roles: ['admin', 'operator', 'management'] },
+  { id: 'inventory', name: 'Almacén', icon: Package, description: 'Control de stock y materias primas', count: 'Low', roles: ['admin', 'operator', 'management'] },
+  { id: 'quality', name: 'Calidad (NC)', icon: ShieldCheck, description: 'Gestión de No Conformidades', count: 3, roles: ['admin', 'quality', 'management'] },
+  { id: 'maintenance', name: 'Mantenimiento', icon: Wrench, description: 'Planes preventivos y herramientas', roles: ['admin', 'maintenance', 'management'] },
+  { id: 'workforce', name: 'Operarios', icon: Users, description: 'Gestión de personal y Check-in', count: '80%', roles: ['admin', 'management'] },
+  { id: 'blueprints', name: 'Planos Técnicos', icon: FileText, description: 'Catálogo de especificaciones', roles: ['admin', 'operator', 'quality', 'maintenance'] },
+  { id: 'reports', name: 'Gerencia', icon: BarChart3, description: 'KPIs, OEE y Análisis de Calidad', roles: ['admin', 'management'] },
+  { id: 'admin', name: 'Usuarios', icon: Settings, description: 'Gestión de accesos y roles', roles: ['admin'] },
+];
+
+export const MOCK_USERS: UserProfile[] = [
+  { id: 'u-1', name: 'Alejandro Mendoza', email: 'a.mendoza@industrial.c', role: 'admin', lastAccess: '2024-05-04 08:30', isActive: true },
+  { id: 'u-2', name: 'Carlos Ruiz', email: 'c.ruiz@industrial.c', role: 'operator', lastAccess: '2024-05-04 06:15', isActive: true },
+  { id: 'u-3', name: 'Elena Torres', email: 'e.torres@industrial.c', role: 'quality', lastAccess: '2024-05-03 16:45', isActive: true },
+  { id: 'u-4', name: 'Miguel Angel', email: 'm.angel@industrial.c', role: 'maintenance', lastAccess: '2024-05-04 07:00', isActive: true },
+  { id: 'u-5', name: 'Sofia Vergara', email: 's.vergara@industrial.c', role: 'management', lastAccess: '2024-05-02 11:20', isActive: false },
 ];
 
 export const MOCK_OEE_DATA = [

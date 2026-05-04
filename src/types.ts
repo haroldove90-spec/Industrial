@@ -42,6 +42,22 @@ export interface OperatorProductivity {
   estimated: number;
 }
 
+export type UserRole = 'admin' | 'operator' | 'quality' | 'maintenance' | 'management';
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  lastAccess: string;
+  isActive: boolean;
+}
+
+export interface RootCauseAnalysis {
+  method: '5whys' | 'ishikawa';
+  data: string[]; // for 5whys it's the 5 questions, for ishikawa it could be categories
+}
+
 export interface NonConformity {
   id: string;
   orderId: string;
@@ -51,6 +67,8 @@ export interface NonConformity {
   costImpact: number;
   status: 'pending' | 'analysis' | 'corrective' | 'closed';
   date?: string;
+  evidenceUrl?: string;
+  rootCause?: RootCauseAnalysis;
 }
 
 export interface Machine {

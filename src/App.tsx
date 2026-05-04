@@ -46,16 +46,22 @@ import ManagementDashboard from './components/ManagementDashboard';
 import MaintenanceView from './components/MaintenanceView';
 import WorkforceView from './components/WorkforceView';
 import BlueprintViewer from './components/BlueprintViewer';
-import { WorkOrder } from './types';
+import AdminUsersView from './components/AdminUsersView';
+import NonConformityWorkflow from './components/NonConformityWorkflow';
+import { WorkOrder, UserRole } from './types';
 
 export default function App() {
   const [activeModule, setActiveModule] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedWO, setSelectedWO] = useState<WorkOrder | null>(null);
+  const [currentRole, setCurrentRole] = useState<UserRole>('admin');
+
+  // Filter modules based on current role
+  const allowedModules = MODULES.filter(m => m.roles.includes(currentRole));
 
   const renderModuleContent = () => {
-    if (activeModule === 'work-orders') {
+    if (activeModule === 'orders') {
       if (selectedWO) {
         return <WorkOrderDetail order={selectedWO} onBack={() => setSelectedWO(null)} />;
       }
@@ -113,10 +119,12 @@ export default function App() {
       );
     }
 
-    if (activeModule === 'reports') return <ManagementDashboard />;
+    if (activeModule === 'reports') return <ManagementDashboard role={currentRole} />;
     if (activeModule === 'maintenance') return <MaintenanceView />;
     if (activeModule === 'workforce') return <WorkforceView />;
     if (activeModule === 'blueprints') return <BlueprintViewer />;
+    if (activeModule === 'admin') return <AdminUsersView />;
+    if (activeModule === 'quality') return <NonConformityWorkflow />;
 
     if (activeModule === 'dashboard') {
       return (
@@ -266,7 +274,7 @@ export default function App() {
                </div>
                <nav className="flex-1 overflow-y-auto p-6">
                   <ul className="space-y-2">
-                    {MODULES.map((module) => (
+                    {allowedModules.map((module) => (
                       <li key={module.id}>
                         <button
                           onClick={() => {
@@ -315,7 +323,7 @@ export default function App() {
 
         <nav className="flex-1 overflow-y-auto px-6 py-10 scrollbar-hide">
           <ul className="space-y-4">
-            {MODULES.map((module) => (
+            {allowedModules.map((module) => (
               <li key={module.id}>
                 <button
                   onClick={() => {
@@ -376,6 +384,22 @@ export default function App() {
           </div>
 
           <div className="flex items-center gap-8">
+            <div className="hidden lg:flex items-center gap-4 bg-white/5 p-1 rounded-2xl border border-white/5 mr-4">
+               {['admin', 'operator', 'quality', 'management'].map((role) => (
+                 <button 
+                  key={role}
+                  onClick={() => {
+                    setCurrentRole(role as UserRole);
+                    setActiveModule('dashboard');
+                  }}
+                  className={`px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${
+                    currentRole === role ? 'bg-blue-600 text-white shadow-lg' : 'text-white/20 hover:text-white/40'
+                  }`}
+                 >
+                   {role}
+                 </button>
+               ))}
+            </div>
             <div className="hidden md:flex flex-col text-right">
               <span className="text-[10px] font-black uppercase text-blue-500 tracking-[0.2em] mb-1">Chief Engineer</span>
               <span className="text-sm font-bold tracking-tight">Alejandro Mendoza</span>
@@ -393,6 +417,24 @@ export default function App() {
           <AnimatePresence mode="wait">
             {renderModuleContent()}
           </AnimatePresence>
+
+          {/* Footer Integration */}
+          <footer className="mt-20 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 pb-12">
+             <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500 mb-1">Industrial Control System</p>
+                <p className="text-[9px] text-white/20 font-bold uppercase tracking-widest">© 2024 Industrial.C • Versión de Prototipo 1.0</p>
+             </div>
+             <div className="flex items-center gap-8">
+                <div className="flex items-center gap-2">
+                   <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+                   <span className="text-[9px] font-black uppercase text-white/30 tracking-widest">Encrypted Stream</span>
+                </div>
+                <div className="flex items-center gap-2">
+                   <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                   <span className="text-[9px] font-black uppercase text-white/30 tracking-widest">Supabase Node: US-West</span>
+                </div>
+             </div>
+          </footer>
         </div>
       </main>
 
