@@ -125,7 +125,7 @@ export default function BlueprintViewer() {
                 </div>
 
                 {/* Specs Drawer */}
-                <div className="p-8 border-t border-white/5 bg-[#0d0d0d]">
+                <div className="p-8 border-t border-white/5 bg-industrial-bg">
                    <div className="flex items-center gap-2 mb-6">
                       <Info className="w-4 h-4 text-[#D4AF37]" />
                       <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#D4AF37]">Especificaciones de Manufactura</h5>

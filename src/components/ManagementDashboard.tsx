@@ -374,7 +374,7 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="bg-[#0d0d0d] text-white min-h-screen -m-8 p-12 space-y-12"
+      className="bg-industrial-bg text-white min-h-screen -m-8 p-12 space-y-12"
     >
       {/* Executive Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-10">

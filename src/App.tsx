@@ -184,7 +184,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen bg-[#0d0d0d] text-white font-sans selection:bg-industrial-red/30 selection:text-white">
+    <div className="flex h-screen bg-industrial-bg text-white font-sans selection:bg-industrial-red/30 selection:text-white">
       {/* Floating Demo Role Selector */}
       <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[300] bg-industrial-card/80 backdrop-blur-2xl border border-white/10 rounded-[2rem] p-2 shadow-2xl flex items-center gap-2">
          <div className="px-4 border-r border-white/10 hidden sm:block">
@@ -230,7 +230,7 @@ export default function App() {
               initial={{ x: -300 }}
               animate={{ x: 0 }}
               exit={{ x: -300 }}
-              className="lg:hidden fixed inset-y-0 left-0 z-[60] w-80 bg-[#0a0a0a] border-r border-white/5 flex flex-col shadow-2xl"
+              className="lg:hidden fixed inset-y-0 left-0 z-[60] w-80 bg-industrial-bg border-r border-white/5 flex flex-col shadow-2xl"
             >
                <div className="p-8 border-b border-white/5 flex items-center justify-between">
              <div className="flex items-center gap-4">
@@ -317,7 +317,7 @@ export default function App() {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col overflow-hidden relative">
         {/* Header */}
-        <header className="h-24 flex items-center justify-between px-8 lg:px-12 z-30 sticky top-0 bg-[#121212]/80 backdrop-blur-xl border-b border-white/5">
+        <header className="h-24 flex items-center justify-between px-8 lg:px-12 z-30 sticky top-0 bg-industrial-bg/80 backdrop-blur-xl border-b border-white/5">
           <div className="flex items-center gap-6 flex-1">
              <button 
               onClick={() => setIsMobileMenuOpen(true)}
