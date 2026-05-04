@@ -35,12 +35,12 @@ export default function BlueprintViewer() {
       animate={{ opacity: 1, y: 0 }}
       className="h-full flex flex-col space-y-8"
     >
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-[#0a0a0a] p-8 rounded-3xl border border-white/5 shadow-2xl">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-industrial-card p-8 rounded-3xl border border-industrial-border shadow-2xl">
         <div>
-          <h2 className="text-3xl font-serif italic text-white flex items-center gap-4">
-            <FileText className="text-blue-500 w-8 h-8" /> Catálogo de Planos
+          <h2 className="text-3xl font-black italic text-white flex items-center gap-4 uppercase tracking-tighter">
+            <FileText className="text-industrial-red w-8 h-8" /> Catálogo de Planos
           </h2>
-          <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] mt-2">Especificaciones técnicas y planos certificados</p>
+          <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.3em] mt-2 italic">Especificaciones técnicas y planos certificados</p>
         </div>
         
         <div className="relative w-full md:w-72">
@@ -48,7 +48,7 @@ export default function BlueprintViewer() {
            <input 
             type="text" 
             placeholder="Buscar por código..." 
-            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-6 text-sm focus:border-blue-500 transition-all outline-none text-white"
+            className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-6 text-sm focus:border-industrial-red/50 transition-all outline-none text-white tracking-wider"
            />
         </div>
       </div>
@@ -56,7 +56,7 @@ export default function BlueprintViewer() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 flex-1">
         {/* Sidebar List */}
         <div className="space-y-4">
-           <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500/60 mb-2">Documentos Recientes</h3>
+           <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-industrial-red/60 mb-2">Documentos Recientes</h3>
            {MOCK_BLUEPRINTS.map((bp) => (
              <div 
               key={bp.id}
@@ -66,15 +66,15 @@ export default function BlueprintViewer() {
               }}
               className={`p-4 rounded-2xl border transition-all cursor-pointer group flex items-center gap-4 ${
                 selectedBlueprint?.id === bp.id 
-                  ? 'bg-blue-600/10 border-blue-500' 
-                  : 'bg-[#0a0a0a] border-white/5 hover:border-blue-500/40'
+                  ? 'bg-industrial-red/10 border-industrial-red' 
+                  : 'bg-industrial-card border-industrial-border hover:border-industrial-red/40'
               }`}
              >
-                <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-blue-500/20 transition-colors">
-                   <FileText className={`w-5 h-5 ${selectedBlueprint?.id === bp.id ? 'text-blue-500' : 'text-white/20'}`} />
+                <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-industrial-red/20 transition-colors">
+                   <FileText className={`w-5 h-5 ${selectedBlueprint?.id === bp.id ? 'text-industrial-red' : 'text-white/20'}`} />
                 </div>
                 <div>
-                  <h4 className="text-sm font-bold text-white group-hover:text-blue-500 transition-colors">{bp.title}</h4>
+                  <h4 className="text-sm font-bold text-white group-hover:text-industrial-red transition-colors">{bp.title}</h4>
                   <p className="text-[10px] text-white/20 font-mono mt-1">{bp.code}</p>
                 </div>
              </div>
@@ -84,11 +84,11 @@ export default function BlueprintViewer() {
         {/* Viewer Area */}
         <div className="lg:col-span-3">
           {selectedBlueprint ? (
-             <div className="bg-[#0a0a0a] rounded-3xl border border-white/5 h-full flex flex-col overflow-hidden shadow-2xl relative">
+             <div className="bg-industrial-card rounded-3xl border border-industrial-border h-full flex flex-col overflow-hidden shadow-2xl relative">
                 {/* Viewer Toolbar */}
                 <div className="p-4 border-b border-white/5 flex items-center justify-between bg-black/40 backdrop-blur-md sticky top-0 z-10">
                    <div className="flex items-center gap-4">
-                      <span className="text-xs font-bold text-white/60">{selectedBlueprint.code} <span className="text-blue-500">v{selectedBlueprint.version}</span></span>
+                      <span className="text-xs font-bold text-white/60">{selectedBlueprint.code} <span className="text-industrial-red">v{selectedBlueprint.version}</span></span>
                       <div className="h-4 w-px bg-white/10"></div>
                       <div className="flex items-center gap-2">
                          <button onClick={handleZoomOut} className="p-2 hover:bg-white/5 rounded-lg text-white/40"><ZoomOut className="w-4 h-4" /></button>
@@ -102,7 +102,7 @@ export default function BlueprintViewer() {
                       </button>
                       <button 
                         onClick={() => setIsFullScreen(true)}
-                        className="p-2 bg-white/5 hover:bg-blue-600 rounded-xl transition-all"
+                        className="p-2 bg-white/5 hover:bg-industrial-red rounded-xl transition-all"
                       >
                         <Maximize2 className="w-4 h-4" />
                       </button>

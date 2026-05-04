@@ -62,21 +62,21 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
           <div className="flex justify-between items-center mb-10">
              <span className="text-[10px] font-black uppercase tracking-widest text-industrial-red bg-industrial-red/10 px-4 py-2 rounded-full">Buyer Location</span>
           </div>
-          <div className="flex-1 flex items-center justify-center relative opacity-80 min-h-[300px]">
+          <div className="flex-1 flex items-center justify-center relative min-h-[300px]">
              {/* Simplified Map Visualization */}
-             <div className="w-full h-full bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg')] bg-contain bg-no-repeat bg-center invert opacity-10"></div>
-             {/* Pins */}
+             <div className="w-full h-full bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg')] bg-contain bg-no-repeat bg-center invert opacity-20 brightness-200 contrast-125"></div>
+             {/* Pins with enhanced visibility */}
              <div className="absolute top-1/4 left-1/4 w-8 h-8 flex flex-col items-center">
-                <div className="bg-industrial-green text-white text-[10px] font-bold px-2 py-1 rounded-md mb-1">65</div>
-                <div className="w-2 h-2 bg-industrial-green rounded-full shadow-[0_0_10px_#10b981]"></div>
+                <div className="bg-industrial-green text-black text-[10px] font-black px-2 py-1 rounded-md mb-1 shadow-lg shadow-industrial-green/50">65</div>
+                <div className="w-3 h-3 bg-industrial-green rounded-full shadow-[0_0_15px_#00FF00] animate-pulse"></div>
              </div>
              <div className="absolute top-1/2 left-1/3 w-8 h-8 flex flex-col items-center">
-                <div className="bg-industrial-orange text-white text-[10px] font-bold px-2 py-1 rounded-md mb-1">250</div>
-                <div className="w-2 h-2 bg-industrial-orange rounded-full shadow-[0_0_10px_#f59e0b]"></div>
+                <div className="bg-industrial-orange text-black text-[10px] font-black px-2 py-1 rounded-md mb-1 shadow-lg shadow-industrial-orange/50">250</div>
+                <div className="w-3 h-3 bg-industrial-orange rounded-full shadow-[0_0_15px_#FFB300] animate-pulse"></div>
              </div>
              <div className="absolute top-1/3 right-1/4 w-8 h-8 flex flex-col items-center">
-                <div className="bg-industrial-orange text-white text-[10px] font-bold px-2 py-1 rounded-md mb-1">45</div>
-                <div className="w-2 h-2 bg-industrial-orange rounded-full shadow-[0_0_10px_#f59e0b]"></div>
+                <div className="bg-industrial-orange text-black text-[10px] font-black px-2 py-1 rounded-md mb-1 shadow-lg shadow-industrial-orange/50">45</div>
+                <div className="w-3 h-3 bg-industrial-orange rounded-full shadow-[0_0_15px_#FFB300] animate-pulse"></div>
              </div>
           </div>
           <div className="mt-auto flex justify-between items-center">
