@@ -30,7 +30,8 @@ import {
   ShieldCheck,
   DollarSign,
   HelpCircle,
-  Lock
+  Lock,
+  LogOut
 } from 'lucide-react';
 import { 
   AreaChart, 
@@ -269,17 +270,17 @@ export default function App() {
       {/* Desktop Sidebar */}
       <motion.aside 
         initial={false}
-        animate={{ width: isSidebarOpen ? 120 : 120 }}
-        className="hidden lg:flex flex-col bg-industrial-card m-4 rounded-[3.5rem] z-40 transition-all shadow-2xl border border-white/5 shrink-0 items-center py-10"
+        animate={{ width: isSidebarOpen ? 100 : 100 }}
+        className="hidden lg:flex flex-col bg-industrial-red m-4 rounded-[3.5rem] z-40 transition-all shadow-[0_0_50px_rgba(237,28,36,0.2)] shrink-0 items-center py-10"
       >
         <div className="mb-12">
-            <div className="w-16 h-16 bg-industrial-red rounded-full flex items-center justify-center text-white font-black text-lg shadow-xl shadow-industrial-red/40">
-              LD
+            <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center text-white font-black text-lg shadow-2xl">
+              IC
             </div>
         </div>
 
         <nav className="flex-1 w-full px-4 overflow-y-auto scrollbar-hide">
-          <ul className="space-y-8 flex flex-col items-center">
+          <ul className="space-y-6 flex flex-col items-center">
             {allowedModules.map((module) => (
               <li key={module.id} className="w-full">
                 <button
@@ -289,11 +290,11 @@ export default function App() {
                   }}
                   className={`w-full flex flex-col items-center justify-center gap-2 group transition-all ${
                     activeModule === module.id 
-                      ? 'text-white opacity-100 scale-110' 
-                      : 'text-white/40 hover:text-white/70 opacity-60'
+                      ? 'text-white' 
+                      : 'text-white/40 hover:text-white/70'
                   }`}
                 >
-                  <div className={`p-4 rounded-3xl transition-all ${activeModule === module.id ? 'bg-industrial-red text-white shadow-lg shadow-industrial-red/40' : 'bg-white/5 group-hover:bg-white/10'}`}>
+                  <div className={`p-4 rounded-3xl transition-all ${activeModule === module.id ? 'bg-black/20 shadow-inner' : 'hover:bg-white/5'}`}>
                     <module.icon className="w-6 h-6" />
                   </div>
                 </button>
@@ -302,9 +303,13 @@ export default function App() {
           </ul>
         </nav>
 
-        <div className="mt-8 flex flex-col items-center gap-6">
-            <button className="text-white/40 hover:text-white">
-              <Lock className="w-6 h-6" />
+        <div className="mt-8 flex flex-col items-center gap-8">
+            <button 
+              onClick={() => setCurrentRole(null)}
+              className="p-4 rounded-3xl bg-black/10 text-white hover:bg-black/20 transition-all group shadow-lg"
+              title="Logout"
+            >
+              <LogOut className="w-6 h-6" />
             </button>
         </div>
       </motion.aside>
@@ -312,7 +317,7 @@ export default function App() {
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col overflow-hidden relative">
         {/* Header */}
-        <header className="h-24 flex items-center justify-between px-8 lg:px-12 z-30 sticky top-0 bg-[#0d0d0d]/80 backdrop-blur-xl">
+        <header className="h-24 flex items-center justify-between px-8 lg:px-12 z-30 sticky top-0 bg-[#121212]/80 backdrop-blur-xl border-b border-white/5">
           <div className="flex items-center gap-6 flex-1">
              <button 
               onClick={() => setIsMobileMenuOpen(true)}

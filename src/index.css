@@ -5,13 +5,15 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-serif: "Playfair Display", ui-serif, Georgia, serif;
 
-  --color-industrial-bg: #111111;
-  --color-industrial-card: #1c1c1c;
+  --color-industrial-bg: #121212;
+  --color-industrial-card: #1e1e1e;
   --color-industrial-red: #ED1C24;
   --color-industrial-orange: #FFB300;
-  --color-industrial-green: #00C853;
-  --color-industrial-border: rgba(255, 255, 255, 0.03);
+  --color-industrial-green: #00FF00;
+  --color-industrial-border: rgba(255, 255, 255, 0.05);
   --color-industrial-text-secondary: #888888;
+  --color-industrial-cyan: #00bcd4;
+  --color-industrial-purple: #9c27b0;
 }
 
 @layer base {

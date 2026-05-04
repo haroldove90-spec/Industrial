@@ -102,10 +102,10 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
           <div className="flex justify-between items-center text-white/40">
              <span className="text-[10px] font-black uppercase tracking-widest text-industrial-red bg-industrial-red/10 px-4 py-2 rounded-full">Performance Metrics</span>
           </div>
-          <div className="space-y-8">
+           <div className="space-y-8">
              {[
                { label: 'OEE Total', value: 88, color: 'bg-industrial-red' },
-               { label: 'Disponibilidad', value: 92, color: 'bg-[#a855f7]' },
+               { label: 'Disponibilidad', value: 92, color: 'bg-industrial-purple' },
                { label: 'Calidad', value: 98, color: 'bg-industrial-green' },
                { label: 'Rendimiento', value: 85, color: 'bg-industrial-orange' }
              ].map((item, id) => (
@@ -117,11 +117,11 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
                         <TrendingUp className="w-3 h-3 text-industrial-green" />
                      </div>
                   </div>
-                  <div className="w-full h-3 bg-white/5 rounded-full overflow-hidden">
+                  <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden p-[1px]">
                      <motion.div 
                         initial={{ width: 0 }}
                         animate={{ width: `${item.value}%` }}
-                        className={`h-full ${item.color} shadow-[0_0_15px_rgba(255,b,b,0.3)]`}
+                        className={`h-full ${item.color} rounded-full shadow-[0_0_12px_currentColor] brightness-125`}
                      ></motion.div>
                   </div>
                </div>
@@ -175,7 +175,7 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
                   stroke="none"
                 >
                   <Cell fill="#ED1C24" />
-                  <Cell fill="#1c1c1c" />
+                  <Cell fill="#2a2a2a" />
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
@@ -208,7 +208,7 @@ export default function ManagementDashboard({ role = 'admin' }: ManagementDashbo
               <BarChart data={MOCK_OPERATOR_PRODUCTIVITY.slice(0, 4)} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                  <Bar dataKey="actual" radius={[4, 4, 0, 0]} barSize={12}>
                     {MOCK_OPERATOR_PRODUCTIVITY.map((_, index) => (
-                       <Cell key={`cell-${index}`} fill={index === 0 ? '#ED1C24' : index === 1 ? '#a855f7' : index === 2 ? '#00C853' : '#FFB300'} />
+                       <Cell key={`cell-${index}`} fill={index === 0 ? '#ED1C24' : index === 1 ? '#9c27b0' : index === 2 ? '#00FF00' : '#00bcd4'} />
                      ))}
                  </Bar>
                 <XAxis 

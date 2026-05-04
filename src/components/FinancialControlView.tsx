@@ -26,7 +26,7 @@ import {
 } from 'recharts';
 import { MOCK_FINANCIAL_DATA, MOCK_NON_CONFORMITIES } from '../constants';
 
-const COLORS = ['#ED1C24', '#ff4444', '#00C853', '#FFB300'];
+const COLORS = ['#ED1C24', '#9c27b0', '#00FF00', '#FFB300'];
 
 export const FinancialControlView: React.FC = () => {
   const totalCostOfNC = MOCK_NON_CONFORMITIES.reduce((acc, curr) => acc + curr.costImpact, 0);
