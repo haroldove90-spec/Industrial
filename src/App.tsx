@@ -15,6 +15,7 @@ import {
   AlertTriangle, 
   Package, 
   CheckCircle2,
+  ChevronLeft,
   ChevronRight,
   Factory,
   ArrowUpRight,
@@ -42,11 +43,15 @@ import {
 import { MODULES, MOCK_OEE_DATA, MOCK_QUALITY_DATA, MOCK_INVENTORY_LEVELS, MOCK_WORK_ORDERS } from './constants';
 import WorkOrderDetail from './components/WorkOrderDetail';
 import ManagementDashboard from './components/ManagementDashboard';
+import MaintenanceView from './components/MaintenanceView';
+import WorkforceView from './components/WorkforceView';
+import BlueprintViewer from './components/BlueprintViewer';
 import { WorkOrder } from './types';
 
 export default function App() {
   const [activeModule, setActiveModule] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedWO, setSelectedWO] = useState<WorkOrder | null>(null);
 
   const renderModuleContent = () => {
@@ -60,45 +65,45 @@ export default function App() {
            animate={{ opacity: 1, x: 0 }}
            className="space-y-6"
         >
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-serif italic text-natural-sidebar">Órdenes de Trabajo</h2>
-            <button className="bg-natural-sidebar text-white px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-natural-accent transition-all shadow-lg shadow-natural-sidebar/20">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <h2 className="text-3xl font-serif italic text-white">Órdenes de Trabajo</h2>
+            <button className="bg-blue-600 text-white px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-blue-500 transition-all shadow-xl shadow-blue-600/20">
               Nueva OT
             </button>
           </div>
-          <div className="grid grid-cols-1 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
             {MOCK_WORK_ORDERS.map((wo) => (
               <div 
                 key={wo.id}
                 onClick={() => setSelectedWO(wo as WorkOrder)}
-                className="bg-white p-6 rounded-2xl border border-natural-border shadow-sm hover:border-natural-accent transition-all cursor-pointer group"
+                className="bg-white/5 p-6 rounded-2xl border border-white/5 hover:border-blue-500/40 transition-all cursor-pointer group backdrop-blur-sm"
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-natural-bg rounded-xl flex items-center justify-center">
-                      <ClipboardCheck className="w-6 h-6 text-natural-accent" />
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                  <div className="flex items-center gap-5">
+                    <div className="w-12 h-12 bg-blue-600/10 rounded-xl flex items-center justify-center border border-blue-500/20">
+                      <ClipboardCheck className="w-6 h-6 text-blue-500" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-lg">{wo.orderNumber}</h4>
-                      <p className="text-[10px] font-black uppercase text-natural-text/40 tracking-widest">{wo.client}</p>
+                      <h4 className="font-bold text-lg text-white">{wo.orderNumber}</h4>
+                      <p className="text-[10px] font-black uppercase text-white/30 tracking-widest">{wo.client}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-8">
-                     <div className="text-right">
-                        <p className="text-[10px] font-black uppercase text-natural-text/40 mb-1">Status</p>
-                        <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded border ${
-                          wo.status === 'in_progress' ? 'bg-blue-50 border-blue-200 text-blue-600' : 'bg-yellow-50 border-yellow-200 text-yellow-600'
+                  <div className="flex flex-wrap items-center gap-8">
+                     <div className="text-left">
+                        <p className="text-[10px] font-black uppercase text-white/20 mb-1">Status</p>
+                        <span className={`text-[9px] font-bold uppercase px-2 py-0.5 rounded border ${
+                          wo.status === 'in_progress' ? 'bg-blue-500/10 border-blue-500/20 text-blue-400' : 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400'
                         }`}>
                           {wo.status.replace('_', ' ')}
                         </span>
                      </div>
-                     <div className="text-right w-24">
-                        <p className="text-[10px] font-black uppercase text-natural-text/40 mb-1">Progreso</p>
-                        <div className="w-full h-1.5 bg-natural-bg rounded-full overflow-hidden">
-                           <div className="h-full bg-natural-accent" style={{ width: `${wo.progress}%` }}></div>
+                     <div className="text-left w-32">
+                        <p className="text-[10px] font-black uppercase text-white/20 mb-1">Progreso</p>
+                        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                           <div className="h-full bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.5)]" style={{ width: `${wo.progress}%` }}></div>
                         </div>
                      </div>
-                     <ChevronRight className="w-5 h-5 text-natural-border group-hover:text-natural-accent transition-colors" />
+                     <ChevronRight className="hidden lg:block w-5 h-5 text-white/10 group-hover:text-blue-500 transition-colors" />
                   </div>
                 </div>
               </div>
@@ -108,9 +113,10 @@ export default function App() {
       );
     }
 
-    if (activeModule === 'reports') {
-      return <ManagementDashboard />;
-    }
+    if (activeModule === 'reports') return <ManagementDashboard />;
+    if (activeModule === 'maintenance') return <MaintenanceView />;
+    if (activeModule === 'workforce') return <WorkforceView />;
+    if (activeModule === 'blueprints') return <BlueprintViewer />;
 
     if (activeModule === 'dashboard') {
       return (
@@ -122,126 +128,97 @@ export default function App() {
           className="space-y-8"
         >
           {/* KPI Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white border border-natural-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-[10px] font-bold uppercase text-natural-accent mb-2 tracking-widest font-mono">Eficiencia (OEE)</div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-[#0a0a0a] border border-white/5 p-8 rounded-3xl shadow-xl hover:border-blue-500/20 transition-all group">
+              <div className="text-[10px] font-black uppercase text-blue-500 mb-4 tracking-[0.2em]">Eficiencia (OEE)</div>
               <div className="flex items-end gap-3">
-                <p className="text-4xl font-light text-natural-sidebar">84.2%</p>
-                <div className="mb-1 flex items-center gap-1 text-[10px] font-bold text-green-600">
+                <p className="text-4xl font-light text-white">84.2%</p>
+                <div className="mb-1 flex items-center gap-1 text-[10px] font-bold text-green-500">
                   <TrendingUp className="w-3 h-3" />
                   ↑ 2.1%
                 </div>
               </div>
-              <p className="text-[10px] text-natural-text/40 italic mt-2">vs mes anterior</p>
+              <p className="text-[10px] text-white/20 italic mt-4 uppercase font-bold tracking-tight">Rendimiento óptimo en Línea A</p>
             </div>
-            <div className="bg-white border border-natural-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-[10px] font-bold uppercase text-natural-accent mb-2 tracking-widest font-mono">No Conformidades</div>
+            <div className="bg-[#0a0a0a] border border-white/5 p-8 rounded-3xl shadow-xl hover:border-blue-500/20 transition-all group">
+              <div className="text-[10px] font-black uppercase text-blue-500 mb-4 tracking-[0.2em]">No Conformidades</div>
               <div className="flex items-end gap-3">
-                <p className="text-4xl font-light text-natural-sidebar">1.28%</p>
-                <div className="mb-1 flex items-center gap-1 text-[10px] font-bold text-red-600">
+                <p className="text-4xl font-light text-white">1.28%</p>
+                <div className="mb-1 flex items-center gap-1 text-[10px] font-bold text-red-500">
                   <ArrowDownRight className="w-3 h-3" />
                   ↓ 0.4%
                 </div>
               </div>
-              <p className="text-[10px] text-natural-text/40 italic mt-2">Bajo el límite de 2%</p>
+              <p className="text-[10px] text-white/20 italic mt-4 uppercase font-bold tracking-tight">Meta: &lt; 2.0%</p>
             </div>
-            <div className="bg-white border border-natural-border p-6 rounded-2xl shadow-sm hover:shadow-md transition-shadow">
-              <div className="text-[10px] font-bold uppercase text-natural-accent mb-2 tracking-widest font-mono">Stock Crítico</div>
+            <div className="bg-[#0a0a0a] border border-white/5 p-8 rounded-3xl shadow-xl hover:border-blue-500/20 transition-all group lg:col-span-1 sm:col-span-2">
+              <div className="text-[10px] font-black uppercase text-blue-500 mb-4 tracking-[0.2em]">Stock Crítico</div>
               <div className="flex items-end gap-3">
-                <p className="text-4xl font-light text-natural-sidebar">12 <span className="text-lg">SKUs</span></p>
-                <div className="mb-1 text-[10px] font-bold text-orange-600 uppercase tracking-tighter bg-orange-50 px-2 py-0.5 rounded">
-                  8 Alertas
+                <p className="text-4xl font-light text-white">12 <span className="text-lg">SKUs</span></p>
+                <div className="mb-1 text-[10px] font-bold text-orange-500 uppercase tracking-tighter bg-orange-500/10 px-2 py-0.5 rounded border border-orange-500/20">
+                  8 ALERTAS
                 </div>
               </div>
-              <p className="text-[10px] text-natural-text/40 italic mt-2">Reponer pronto</p>
+              <p className="text-[10px] text-white/20 italic mt-4 uppercase font-bold tracking-tight">Reponer antes de 48h</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-            <div className="lg:col-span-3 bg-white p-8 rounded-2xl border border-natural-border shadow-sm flex flex-col">
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-lg font-semibold tracking-tight">Flujo de Trazabilidad Activo</h2>
-                <span className="text-[9px] bg-natural-bg px-2 py-1 rounded text-natural-accent font-black uppercase tracking-widest">Real-Time Data</span>
+          <div className="grid grid-cols-1 xl:grid-cols-5 gap-8">
+            <div className="xl:col-span-3 bg-[#0a0a0a] p-10 rounded-3xl border border-white/5 shadow-2xl flex flex-col">
+              <div className="flex justify-between items-center mb-10">
+                <h2 className="text-lg font-bold tracking-tight text-white uppercase tracking-widest text-[12px] text-blue-500">Flujo de Trazabilidad Activo</h2>
+                <span className="text-[9px] bg-blue-600/10 border border-blue-500/20 px-3 py-1 rounded-full text-blue-500 font-black uppercase tracking-widest">Real-Time Data Feed</span>
               </div>
-              <div className="flex-1 flex flex-col justify-center gap-4">
-                <div className="flex items-center gap-5">
-                  <div className="w-12 h-12 rounded-full border-2 border-natural-accent flex items-center justify-center text-natural-accent font-bold shadow-sm bg-white">01</div>
-                  <div className="flex-1 p-4 bg-natural-bg rounded-xl border-l-4 border-natural-accent">
-                    <div className="text-[10px] font-black uppercase text-natural-sidebar tracking-widest mb-1">Entrada Materia Prima</div>
-                    <div className="text-xs text-natural-text/60 font-medium">Lote #MP-9942 - Acero Inoxidable 304</div>
+              <div className="flex-1 flex flex-col justify-center gap-6">
+                <div className="flex items-center gap-6">
+                  <div className="w-14 h-14 rounded-2xl border-2 border-blue-600/40 flex items-center justify-center text-blue-500 font-bold shadow-xl bg-blue-600/5 transition-transform hover:scale-105">01</div>
+                  <div className="flex-1 p-5 bg-white/5 rounded-2xl border-l-4 border-blue-600 backdrop-blur-md">
+                    <div className="text-[9px] font-black uppercase text-white/20 tracking-[0.2em] mb-1">Entrada Materia Prima</div>
+                    <div className="text-xs text-white/70 font-bold uppercase tracking-tight">Lote #MP-9942 - Acero Inoxidable 304</div>
                   </div>
                 </div>
-                <div className="w-0.5 h-6 bg-natural-border ml-[23px]"></div>
-                <div className="flex items-center gap-5">
-                  <div className="w-12 h-12 rounded-full border-2 border-natural-accent flex items-center justify-center text-natural-accent font-bold shadow-sm bg-white">02</div>
-                  <div className="flex-1 p-4 bg-natural-bg rounded-xl border-l-4 border-natural-accent">
-                    <div className="text-[10px] font-black uppercase text-natural-sidebar tracking-widest mb-1">Procesamiento y Corte</div>
-                    <div className="text-xs text-natural-text/60 font-medium">Operario: Carlos Ruiz | Máquina: CNC-04</div>
+                <div className="w-0.5 h-8 bg-blue-600/20 ml-[27px]"></div>
+                <div className="flex items-center gap-6">
+                  <div className="w-14 h-14 rounded-2xl border-2 border-blue-600/40 flex items-center justify-center text-blue-500 font-bold shadow-xl bg-blue-600/5 transition-transform hover:scale-105">02</div>
+                  <div className="flex-1 p-5 bg-white/5 rounded-2xl border-l-4 border-blue-600 backdrop-blur-md">
+                    <div className="text-[9px] font-black uppercase text-white/20 tracking-[0.2em] mb-1">Procesamiento y Corte</div>
+                    <div className="text-xs text-white/70 font-bold uppercase tracking-tight">Maquinaria: CNC-04 | Operario: C. Ruiz</div>
                   </div>
                 </div>
-                <div className="w-0.5 h-6 bg-natural-border ml-[23px]"></div>
-                <div className="flex items-center gap-5 opacity-40">
-                  <div className="w-12 h-12 rounded-full border-2 border-natural-sidebar flex items-center justify-center font-bold">03</div>
-                  <div className="flex-1 p-4 border border-natural-border bg-white rounded-xl">
-                    <div className="text-[10px] font-black uppercase tracking-widest mb-1">Validación de Calidad</div>
-                    <div className="text-xs">Pendiente de escaneo dimensional</div>
+                <div className="w-0.5 h-8 bg-blue-600/20 ml-[27px]"></div>
+                <div className="flex items-center gap-6 opacity-30">
+                  <div className="w-14 h-14 rounded-2xl border-2 border-white/5 flex items-center justify-center text-white/20 font-bold">03</div>
+                  <div className="flex-1 p-5 border border-white/5 bg-white/[0.02] rounded-2xl">
+                    <div className="text-[9px] font-black uppercase tracking-[0.2em] mb-1 text-white/20">Validación de Calidad</div>
+                    <div className="text-xs text-white/10 uppercase font-black">Pendiente de escaneo dimensional</div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="lg:col-span-2 bg-natural-sidebar p-8 rounded-2xl shadow-xl text-white flex flex-col">
-              <div className="flex items-center gap-2 mb-6">
-                <Database className="w-4 h-4 text-natural-light-accent" />
-                <h3 className="text-xs font-bold uppercase tracking-widest text-natural-light-accent">Arquitectura Modular</h3>
+            <div className="xl:col-span-2 bg-gradient-to-br from-[#0a0a0a] to-[#010b1a] p-10 rounded-3xl border border-blue-500/20 shadow-[0_0_50px_rgba(37,99,235,0.1)] text-white flex flex-col">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
+                  <Database className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-500">Core Industrial</h3>
               </div>
-              <div className="space-y-4 font-mono text-[10px] opacity-90 flex-1 overflow-auto scrollbar-hide">
-                <div className="p-3 bg-black/20 rounded-lg border border-white/5 shadow-inner">
-                  <span className="text-[#fbbf24] italic uppercase">TABLE</span> production (<br/>
-                  &nbsp;&nbsp;id uuid <span className="text-natural-light-accent">PK</span>,<br/>
-                  &nbsp;&nbsp;wo_id <span className="text-natural-light-accent">FK</span>,<br/>
-                  &nbsp;&nbsp;machine_id <span className="text-natural-light-accent">FK</span>,<br/>
-                  &nbsp;&nbsp;performance <span className="text-blue-300">DECIMAL</span><br/>
+              <div className="space-y-4 font-mono text-[11px] opacity-90 flex-1 overflow-auto scrollbar-hide">
+                <div className="p-4 bg-black/40 rounded-xl border border-white/5 shadow-inner">
+                  <span className="text-blue-400 font-bold">SELECT</span> * <span className="text-blue-400">FROM</span> production<br/>
+                  <span className="text-blue-400">WHERE</span> efficiency &gt; 80<br/>
+                  <span className="text-blue-400">ORDER BY</span> timestamp <span className="text-blue-400">DESC</span>;
+                </div>
+                <div className="p-4 bg-black/40 rounded-xl border border-white/5 shadow-inner">
+                  <span className="text-[#fbbf24] uppercase">SCHEMA</span> traceability (<br/>
+                  &nbsp;&nbsp;id uuid <span className="text-blue-300">PRIMARY KEY</span>,<br/>
+                  &nbsp;&nbsp;logs <span className="text-blue-300">JSONB</span>,<br/>
+                  &nbsp;&nbsp;verified <span className="text-blue-300">BOOLEAN</span><br/>
                   );
                 </div>
-                <div className="p-3 bg-black/20 rounded-lg border border-white/5 shadow-inner">
-                  <span className="text-[#fbbf24] italic uppercase">TABLE</span> traceability (<br/>
-                  &nbsp;&nbsp;id uuid <span className="text-natural-light-accent">PK</span>,<br/>
-                  &nbsp;&nbsp;batch_no <span className="text-white">TEXT</span>,<br/>
-                  &nbsp;&nbsp;logs <span className="text-blue-300">JSONB</span><br/>
-                  );
-                </div>
               </div>
-              <p className="text-[11px] leading-relaxed italic text-natural-light-accent mt-6 font-medium">
-                Integridad referencial blindada para 10 módulos operativos diseñados para escalabilidad en Supabase.
+              <p className="text-[12px] leading-relaxed italic text-blue-200/50 mt-10 font-medium">
+                Arquitectura de baja latencia con <span className="text-blue-400">Supabase Realtime</span> para monitoreo de planta crítico.
               </p>
-            </div>
-          </div>
-
-          <div className="bg-white border border-natural-border p-8 rounded-2xl shadow-sm">
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h3 className="text-xl font-bold tracking-tight">Rendimiento Histórico OEE</h3>
-                <p className="text-xs text-natural-text/40 font-medium mt-1 uppercase tracking-widest">Planta de Mecanizado • Últimos 6 días</p>
-              </div>
-              <button className="text-[10px] font-bold uppercase tracking-widest bg-natural-bg px-4 py-2 text-natural-accent rounded-full hover:bg-natural-border transition-colors">Ver Detalles</button>
-            </div>
-            <div className="h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={MOCK_OEE_DATA}>
-                  <defs>
-                    <linearGradient id="colorNatural" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#7D8C69" stopOpacity={0.2}/>
-                      <stop offset="95%" stopColor="#7D8C69" stopOpacity={0}/>
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E5E5DB" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 'bold', fill: '#3D4035' }}/>
-                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 11, fontWeight: 'bold', fill: '#3D4035' }} domain={[0, 100]}/>
-                  <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #E5E5DB', backgroundColor: 'white', color: '#3D4035' }}/>
-                  <Area type="monotone" dataKey="oee" stroke="#7D8C69" strokeWidth={4} fillOpacity={1} fill="url(#colorNatural)" />
-                  <Area type="monotone" dataKey="target" stroke="#3D4035" strokeDasharray="8 8" strokeWidth={1} fill="transparent" />
-                </AreaChart>
-              </ResponsiveContainer>
             </div>
           </div>
         </motion.div>
@@ -249,68 +226,95 @@ export default function App() {
     }
 
     return (
-      <motion.div
-        key="other-view"
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.98 }}
-        className="flex flex-col items-center justify-center h-full text-center space-y-6"
-      >
-        <div className="w-24 h-24 bg-natural-light-accent/10 rounded-3xl flex items-center justify-center mb-4 shadow-inner border border-natural-border">
-          {React.createElement(MODULES.find(m => m.id === activeModule)?.icon || LayoutDashboard, { className: "w-10 h-10 text-natural-accent" })}
+      <div className="flex flex-col items-center justify-center h-full text-center p-12">
+        <div className="w-24 h-24 bg-blue-600/10 rounded-3xl flex items-center justify-center mb-8 border border-blue-500/20">
+           {React.createElement(MODULES.find(m => m.id === activeModule)?.icon || LayoutDashboard, { className: "w-10 h-10 text-blue-500" })}
         </div>
-        <h2 className="text-3xl font-serif italic text-natural-sidebar lowercase"><span className="uppercase not-italic font-sans font-bold">Módulo:</span> {MODULES.find(m => m.id === activeModule)?.name}</h2>
-        <p className="text-natural-text/60 max-w-sm font-medium text-lg italic">
-          "Información operacional vinculada al esquema SQL de integridad."
-        </p>
-        <div className="grid grid-cols-2 gap-4 pt-12">
-           <div className="p-6 bg-white border border-natural-border rounded-2xl w-52 text-left shadow-sm">
-              <div className="w-10 h-10 bg-natural-bg rounded-xl mb-4 flex items-center justify-center shadow-sm"><CheckCircle2 className="w-5 h-5 text-natural-accent" /></div>
-              <p className="text-[10px] font-black uppercase text-natural-accent mb-1 tracking-widest">Base de Datos</p>
-              <p className="text-xs font-bold leading-tight">Tablas referenciadas en Supabase</p>
-           </div>
-           <div className="p-6 bg-white border border-natural-border rounded-2xl w-52 text-left shadow-sm">
-              <div className="w-10 h-10 bg-natural-bg rounded-xl mb-4 flex items-center justify-center shadow-sm"><Wrench className="w-5 h-5 text-natural-accent" /></div>
-              <p className="text-[10px] font-black uppercase text-natural-accent mb-1 tracking-widest">Estructura</p>
-              <p className="text-xs font-bold leading-tight">Arquitectura modular escalable</p>
-           </div>
-        </div>
-      </motion.div>
+        <h2 className="text-3xl font-serif italic text-white mb-4">Módulo de {MODULES.find(m => m.id === activeModule)?.name}</h2>
+        <p className="text-white/40 max-w-sm text-lg italic">Próximamente disponible en la fase de escalabilidad operativa.</p>
+      </div>
     );
   };
 
   return (
-    <div className="flex h-screen bg-natural-bg text-natural-text font-sans selection:bg-[#7D8C6920] selection:text-[#3D4035]">
-      {/* Sidebar */}
+    <div className="flex h-screen bg-[#050505] text-white font-sans selection:bg-blue-600/30 selection:text-white">
+      {/* Mobile Sidebar */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <>
+            <motion.div 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="lg:hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm"
+            />
+            <motion.aside 
+              initial={{ x: -300 }}
+              animate={{ x: 0 }}
+              exit={{ x: -300 }}
+              className="lg:hidden fixed inset-y-0 left-0 z-[60] w-80 bg-[#0a0a0a] border-r border-white/5 flex flex-col shadow-2xl"
+            >
+               <div className="p-8 border-b border-white/5 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                     <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+                        <Activity className="text-white w-6 h-6" />
+                     </div>
+                     <span className="font-black text-xl tracking-tighter">INDUSTRIAL<span className="text-blue-500">.C</span></span>
+                  </div>
+                  <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 bg-white/5 rounded-lg text-white/40"><X className="w-5 h-5" /></button>
+               </div>
+               <nav className="flex-1 overflow-y-auto p-6">
+                  <ul className="space-y-2">
+                    {MODULES.map((module) => (
+                      <li key={module.id}>
+                        <button
+                          onClick={() => {
+                            setActiveModule(module.id);
+                            setSelectedWO(null);
+                            setIsMobileMenuOpen(false);
+                          }}
+                          className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all ${
+                            activeModule === module.id ? 'bg-blue-600 text-white shadow-xl shadow-blue-600/20' : 'text-white/40 hover:bg-white/5'
+                          }`}
+                        >
+                          <module.icon className="w-5 h-5" />
+                          <span className="text-sm font-bold uppercase tracking-widest">{module.name}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+               </nav>
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop Sidebar */}
       <motion.aside 
         initial={false}
-        animate={{ width: isSidebarOpen ? 280 : 80 }}
-        className="bg-natural-sidebar text-white flex flex-col z-50 overflow-hidden shadow-2xl"
+        animate={{ width: isSidebarOpen ? 300 : 90 }}
+        className="hidden lg:flex flex-col bg-[#0a0a0a] border-r border-white/5 z-40 transition-all shadow-2xl"
       >
-        <div className="p-6 border-b border-white/10 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-natural-accent flex items-center justify-center rounded-lg shadow-inner">
-              <Factory className="text-white w-6 h-6" />
+        <div className="p-10 border-b border-white/5 overflow-hidden">
+          <div className="flex items-center gap-4 min-w-max">
+            <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-600/10">
+              <Activity className="text-white w-7 h-7" />
             </div>
             {isSidebarOpen && (
               <motion.span 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="font-bold text-xl tracking-tight uppercase"
+                className="font-black text-xl tracking-tighter"
               >
-                METAL<span className="text-natural-light-accent">CORE</span>
+                INDUSTRIAL<span className="text-blue-500">.C</span>
               </motion.span>
             )}
           </div>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-4 py-6 scrollbar-hide">
-          {isSidebarOpen && (
-            <div className="mb-4 px-3 text-[10px] uppercase tracking-wider text-natural-light-accent font-bold opacity-80">
-              Módulos de Sistema
-            </div>
-          )}
-          <ul className="space-y-1">
+        <nav className="flex-1 overflow-y-auto px-6 py-10 scrollbar-hide">
+          <ul className="space-y-4">
             {MODULES.map((module) => (
               <li key={module.id}>
                 <button
@@ -318,18 +322,18 @@ export default function App() {
                     setActiveModule(module.id);
                     setSelectedWO(null);
                   }}
-                  className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all group ${
+                  className={`w-full flex items-center gap-4 p-4 rounded-2xl transition-all group overflow-hidden ${
                     activeModule === module.id 
-                      ? 'bg-natural-accent text-white shadow-lg' 
-                      : 'hover:bg-white/5 text-white/60 hover:text-white'
+                      ? 'bg-blue-600 text-white shadow-2xl shadow-blue-600/20' 
+                      : 'hover:bg-white/5 text-white/40 hover:text-white'
                   }`}
                 >
-                  <module.icon className={`w-5 h-5 shrink-0 ${activeModule === module.id ? 'text-white' : 'text-natural-light-accent opacity-50 group-hover:opacity-100'}`} />
+                  <module.icon className={`w-6 h-6 shrink-0 transition-transform group-hover:scale-110 ${activeModule === module.id ? 'text-white' : 'text-blue-500/40 group-hover:text-blue-500'}`} />
                   {isSidebarOpen && (
-                    <div className="flex flex-1 items-center justify-between">
-                      <span className="text-sm font-medium">{module.name}</span>
+                    <div className="flex flex-1 items-center justify-between min-w-max">
+                      <span className="text-xs font-black uppercase tracking-widest">{module.name}</span>
                       {module.count && (
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeModule === module.id ? 'bg-natural-sidebar text-white' : 'bg-white/10 text-natural-light-accent'}`}>
+                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-black ${activeModule === module.id ? 'bg-black/20' : 'bg-white/5'}`}>
                           {module.count}
                         </span>
                       )}
@@ -341,53 +345,60 @@ export default function App() {
           </ul>
         </nav>
 
-        <div className="p-6 bg-black/10">
-          <div className="flex items-center justify-center mb-4">
-             <button 
+        <div className="p-8 border-t border-white/5 flex items-center justify-center">
+            <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-2 hover:bg-white/10 rounded-full text-white/40 transition-colors group"
+              className="p-3 hover:bg-white/5 rounded-2xl text-white/20 transition-all hover:text-blue-500"
             >
-              {isSidebarOpen ? <X className="w-5 h-5 group-hover:text-white" /> : <Menu className="w-5 h-5 group-hover:text-white" />}
+              {isSidebarOpen ? <ChevronLeft className="w-6 h-6" /> : <ChevronRight className="w-6 h-6" />}
             </button>
-          </div>
-          {isSidebarOpen && (
-            <div className="flex items-center gap-3 text-[10px] opacity-70 font-medium tracking-wide justify-center">
-              <div className="h-2 w-2 rounded-full bg-green-400 shadow-[0_0_8px_rgba(74,222,128,0.5)]"></div>
-              <span className="uppercase italic">Conectado a Producción</span>
-            </div>
-          )}
         </div>
       </motion.aside>
 
-      {/* Main Content */}
+      {/* Main Content Area */}
       <main className="flex-1 flex flex-col overflow-hidden relative">
         {/* Header */}
-        <header className="h-20 border-b border-natural-border bg-white flex items-center justify-between px-8 z-10 sticky top-0 shadow-sm">
-          <h1 className="text-2xl font-serif italic text-natural-sidebar">Panel de Control Industrial</h1>
-
+        <header className="h-24 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-8 lg:px-12 z-30 sticky top-0">
           <div className="flex items-center gap-6">
-            <div className="flex flex-col text-right">
-              <span className="text-[10px] font-bold uppercase text-natural-accent tracking-widest">Ing. de Planta</span>
-              <span className="text-sm font-semibold">Alejandro Mendoza</span>
+             <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="lg:hidden p-3 bg-white/5 rounded-xl text-white/40"
+             >
+                <Menu className="w-6 h-6" />
+             </button>
+             <div className="hidden sm:block">
+                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-blue-500 mb-1 block">Operational Status</span>
+                <div className="flex items-center gap-3">
+                   <div className="h-2 w-2 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.6)]"></div>
+                   <h1 className="text-sm font-bold uppercase tracking-tight text-white/80">Planta General Mecanizado II</h1>
+                </div>
+             </div>
+          </div>
+
+          <div className="flex items-center gap-8">
+            <div className="hidden md:flex flex-col text-right">
+              <span className="text-[10px] font-black uppercase text-blue-500 tracking-[0.2em] mb-1">Chief Engineer</span>
+              <span className="text-sm font-bold tracking-tight">Alejandro Mendoza</span>
             </div>
-            <div className="h-10 w-10 rounded-full bg-natural-bg border border-natural-border p-1">
-              <div className="h-full w-full bg-natural-light-accent/20 rounded-full flex items-center justify-center">
-                <User className="text-natural-sidebar w-5 h-5" />
+            <div className="h-12 w-12 rounded-2xl bg-blue-600/10 border border-blue-500/20 p-1 group cursor-pointer transition-all hover:border-blue-500">
+              <div className="h-full w-full bg-blue-600 flex items-center justify-center rounded-xl shadow-lg transition-transform group-hover:scale-95">
+                <User className="text-white w-6 h-6" />
               </div>
             </div>
           </div>
         </header>
 
-        {/* Content View */}
-        <div className="flex-1 overflow-y-auto p-8 space-y-8">
+        {/* Scrolling Content */}
+        <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 md:p-12 space-y-12 pb-24 scrollbar-hide">
           <AnimatePresence mode="wait">
             {renderModuleContent()}
           </AnimatePresence>
         </div>
       </main>
 
-      {/* Aesthetic Grain/Paper Texture Overlay */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.05] grayscale brightness-125" style={{ backgroundImage: "url('https://grainy-gradients.vercel.app/noise.svg')" }}></div>
+      {/* Overlay Glow Background Effects */}
+      <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-blue-600/5 blur-[120px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/3"></div>
+      <div className="fixed bottom-0 left-0 w-[400px] h-[400px] bg-blue-900/5 blur-[100px] rounded-full pointer-events-none translate-y-1/3 -translate-x-1/3"></div>
     </div>
   );
 }

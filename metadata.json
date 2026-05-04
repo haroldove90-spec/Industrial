@@ -1,6 +1,6 @@
 {
-  "name": "MetalFlow ERP",
-  "description": "Prototipo de gestión modular para el sector metalmecánico, con monitoreo de OEE, control de calidad y trazabilidad.",
+  "name": "Industrial Control",
+  "description": "Plataforma integral de gestión industrial: Control de producción, OEE, mantenimiento preventivo y trazabilidad inteligente.",
   "requestFramePermissions": [],
   "majorCapabilities": []
 }

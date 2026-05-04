@@ -46,7 +46,7 @@ export default function ManagementDashboard() {
     { name: 'Efficiency', value: 84.2 },
     { name: 'Gap', value: 15.8 },
   ];
-  const COLORS = ['#D4AF37', '#1A1A1A']; // Gold and Dark
+  const COLORS = ['#2563eb', '#1A1A1A']; // Blue and Dark
 
   const renderAnalytics = () => (
     <div className="space-y-8">
@@ -56,7 +56,7 @@ export default function ManagementDashboard() {
           <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity">
              <Timer className="w-32 h-32 text-white" />
           </div>
-          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#D4AF37] mb-8">Disponibilidad Planta (OEE)</h3>
+          <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500 mb-8">Disponibilidad Planta (OEE)</h3>
           <div className="relative w-48 h-48">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -80,7 +80,7 @@ export default function ManagementDashboard() {
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className="text-4xl font-light text-white">84.2%</span>
-              <span className="text-[9px] font-bold text-[#10B981] uppercase mt-1">↑ Excelente</span>
+              <span className="text-[9px] font-bold text-green-500 uppercase mt-1">↑ Excelente</span>
             </div>
           </div>
           <p className="text-[10px] text-white/40 mt-8 text-center max-w-[200px]">
@@ -90,10 +90,10 @@ export default function ManagementDashboard() {
 
         <div className="lg:col-span-2 bg-[#0A0A0A] p-8 rounded-3xl border border-white/5 shadow-2xl">
           <div className="flex justify-between items-center mb-10">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#D4AF37]">Productividad por Operario (Real vs Est.)</h3>
+            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">Productividad por Operario (Real vs Est.)</h3>
             <div className="flex gap-4">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-[#D4AF37]"></div>
+                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
                 <span className="text-[9px] text-white/40 uppercase font-bold">Real</span>
               </div>
               <div className="flex items-center gap-2">
@@ -112,7 +112,7 @@ export default function ManagementDashboard() {
                   cursor={{ fill: 'rgba(255,255,255,0.02)' }}
                   contentStyle={{ backgroundColor: '#111', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
                 />
-                <Bar dataKey="actual" fill="#D4AF37" radius={[4, 4, 0, 0]} barSize={20} />
+                <Bar dataKey="actual" fill="#2563eb" radius={[4, 4, 0, 0]} barSize={20} />
                 <Bar dataKey="estimated" fill="rgba(255,255,255,0.1)" radius={[4, 4, 0, 0]} barSize={20} />
               </BarChart>
             </ResponsiveContainer>
@@ -123,7 +123,7 @@ export default function ManagementDashboard() {
       {/* Second row: Heatmap & Alerts */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 bg-[#0A0A0A] p-8 rounded-3xl border border-white/5 shadow-2xl">
-           <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#D4AF37] mb-8">Heatmap: Incidencias de Calidad por Máquina</h3>
+           <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500 mb-8">Heatmap: Incidencias de Calidad por Máquina</h3>
            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {MOCK_QUALITY_HEATMAP.map((item) => (
                 <div 
@@ -143,8 +143,8 @@ export default function ManagementDashboard() {
         </div>
 
         <div className="bg-[#0A0A0A] p-8 rounded-3xl border border-white/5 shadow-2xl relative overflow-hidden">
-           <div className="absolute top-0 right-0 w-32 h-32 bg-[#D4AF37]/5 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2"></div>
-           <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#D4AF37] mb-6 flex items-center gap-2">
+           <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 blur-3xl rounded-full translate-x-1/2 -translate-y-1/2"></div>
+           <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500 mb-6 flex items-center gap-2">
               <Zap className="w-3 h-3" /> Alertas Predictivas
            </h3>
            <div className="space-y-4">
@@ -171,8 +171,8 @@ export default function ManagementDashboard() {
   const renderKanban = () => {
     const columns = [
       { id: 'pending', title: 'Pendiente', color: 'bg-red-500' },
-      { id: 'analyzing', title: 'En Análisis', color: 'bg-orange-500' },
-      { id: 'action', title: 'Acción Correctiva', color: 'bg-blue-500' },
+      { id: 'analysis', title: 'En Análisis', color: 'bg-orange-500' },
+      { id: 'corrective', title: 'Acción Correctiva', color: 'bg-blue-500' },
       { id: 'closed', title: 'Cerrado', color: 'bg-green-500' },
     ];
 
@@ -192,25 +192,25 @@ export default function ManagementDashboard() {
                 <motion.div 
                   layoutId={nc.id}
                   key={nc.id}
-                  className="bg-[#0A0A0A] p-5 rounded-2xl border border-white/[0.08] shadow-lg group hover:border-[#D4AF37]/40 transition-all cursor-pointer"
+                  className="bg-[#0A0A0A] p-5 rounded-2xl border border-white/[0.08] shadow-lg group hover:border-blue-500/40 transition-all cursor-pointer"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <span className={`text-[8px] font-black uppercase px-2 py-0.5 rounded ${
-                      nc.priority === 'critical' ? 'bg-red-500 text-white' : 'bg-white/10 text-white/60'
+                      nc.priority === 'urgent' ? 'bg-red-500 text-white' : 'bg-white/10 text-white/60'
                     }`}>
                       {nc.priority}
                     </span>
-                    <span className="text-[10px] font-mono text-[#D4AF37] font-bold">${nc.cost.toLocaleString()} lost</span>
+                    <span className="text-[10px] font-mono text-blue-500 font-bold">${nc.costImpact.toLocaleString()} lost</span>
                   </div>
-                  <h5 className="text-sm font-medium text-white/90 mb-4 group-hover:text-white transition-colors">{nc.title}</h5>
+                  <h5 className="text-sm font-medium text-white/90 mb-4 group-hover:text-white transition-colors">{nc.description}</h5>
                   <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/[0.05]">
                     <div className="flex items-center gap-2">
                        <div className="w-5 h-5 bg-white/5 rounded-md flex items-center justify-center">
                           <AlertOctagon className="w-3 h-3 text-white/40" />
                        </div>
-                       <span className="text-[10px] font-bold text-white/40">{nc.machine}</span>
+                       <span className="text-[10px] font-bold text-white/40">{nc.orderId}</span>
                     </div>
-                    <ChevronRight className="w-4 h-4 text-white/10 group-hover:text-[#D4AF37] transition-all" />
+                    <ChevronRight className="w-4 h-4 text-white/10 group-hover:text-blue-500 transition-all" />
                   </div>
                 </motion.div>
               ))}
@@ -231,10 +231,10 @@ export default function ManagementDashboard() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 border-b border-white/5 pb-10">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-8 h-px bg-[#D4AF37]"></div>
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-[#D4AF37]">Control Gerencial</span>
+            <div className="w-8 h-px bg-blue-500"></div>
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500">Control Gerencial</span>
           </div>
-          <h1 className="text-5xl font-serif italic mb-2">Planta Inteligente V.2</h1>
+          <h1 className="text-5xl font-serif italic mb-2">Industrial Control V.2</h1>
           <p className="text-white/40 text-sm font-medium">Análisis de rendimiento, rentabilidad y aseguramiento de calidad.</p>
         </div>
 
@@ -243,7 +243,7 @@ export default function ManagementDashboard() {
               <button 
                 onClick={() => setActiveTab('analytics')}
                 className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
-                  activeTab === 'analytics' ? 'bg-[#D4AF37] text-black shadow-lg' : 'text-white/40 hover:text-white'
+                  activeTab === 'analytics' ? 'bg-blue-600 text-white shadow-lg' : 'text-white/40 hover:text-white'
                 }`}
               >
                 Analítica
@@ -251,7 +251,7 @@ export default function ManagementDashboard() {
               <button 
                 onClick={() => setActiveTab('kanban')}
                 className={`px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${
-                  activeTab === 'kanban' ? 'bg-[#D4AF37] text-black shadow-lg' : 'text-white/40 hover:text-white'
+                  activeTab === 'kanban' ? 'bg-blue-600 text-white shadow-lg' : 'text-white/40 hover:text-white'
                 }`}
               >
                 No Conformidades
