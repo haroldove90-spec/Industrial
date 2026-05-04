@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Playfair Display", ui-serif, Georgia, serif;
+
+  --color-natural-bg: #F4F4EF;
+  --color-natural-text: #2C2E27;
+  --color-natural-sidebar: #3D4035;
+  --color-natural-accent: #7D8C69;
+  --color-natural-light-accent: #A5B892;
+  --color-natural-border: #E5E5DB;
+}
+
+@layer base {
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;1,400&display=swap');
+
+  body {
+    @apply antialiased text-natural-text bg-natural-bg;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+  }
+
+  /* Custom scrollbar for natural dashboard */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-[#E5E5DB] rounded-full hover:bg-[#D4D4C9];
+  }
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

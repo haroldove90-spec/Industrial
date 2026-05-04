@@ -1,0 +1,6 @@
+{
+  "name": "MetalFlow ERP",
+  "description": "Prototipo de gestión modular para el sector metalmecánico, con monitoreo de OEE, control de calidad y trazabilidad.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
